@@ -108,6 +108,79 @@
                 opacity: 1;
             }
         }
+
+        /* --- お問い合わせセクションの雰囲気・背景色（もっと薄い青） --- */
+        #contact.contact-section-custom {
+            background: #f5faff; /* すごく薄い青 */
+            border-radius: 24px;
+            margin-top: 48px;
+            margin-bottom: 48px;
+            box-shadow: 0 6px 32px rgba(65, 97, 129, 0.10);
+            padding: 48px 0 36px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        #contact.contact-section-custom .section-title {
+            color: #195085;
+            letter-spacing: 0.14em;
+        }
+        /* フォーム部分を広めに・余白調整 */
+        #contact.contact-section-custom .contact-form-wrapper {
+            background: rgba(255,255,255,0.92);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(25,80,133,0.03);
+            max-width: 760px; /* << ここを広く */
+            width: 96%;
+            margin: 40px auto 0 auto;
+            padding: 40px 32px 40px 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #contact.contact-section-custom::before, #contact.contact-section-custom::after {
+            content: '';
+            position: absolute;
+            z-index: 0;
+            border-radius: 50%;
+        }
+        #contact.contact-section-custom::before {
+            width: 180px;
+            height: 120px;
+            top: -40px;
+            left: -60px;
+            background: rgba(198, 229, 255, 0.20);
+            filter: blur(14px);
+        }
+        #contact.contact-section-custom::after {
+            width: 140px;
+            height: 90px;
+            bottom: -30px;
+            right: -40px;
+            background: rgba(220, 235, 255, 0.22);
+            filter: blur(16px);
+        }
+        @media (max-width:900px){
+            #contact.contact-section-custom .contact-form-wrapper {
+                max-width: 99vw;
+                padding: 18px 0 18px 0;
+            }
+        }
+        @media (max-width:700px){
+            #contact.contact-section-custom {
+                margin: 28px 0 28px 0;
+                padding: 25px 0 18px 0;
+                border-radius: 14px;
+            }
+            #contact.contact-section-custom .contact-form-wrapper {
+                max-width: 99vw;
+                padding: 8px 0 8px 0;
+            }
+        }
+        #contact.contact-section-custom.section {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+
     </style>
 </head>
 
@@ -225,7 +298,8 @@
                 allowfullscreen="" loading="lazy" title="Google Map"></iframe>
         </section>
 
-        <section id="contact" class="section">
+        <!-- お問い合わせセクション: カスタム雰囲気のsectionにクラスを追加 -->
+        <section id="contact" class="section contact-section-custom">
             <h2 class="section-title">お問い合わせ</h2>
             <div class="contact-form-wrapper">
                 <iframe
@@ -235,7 +309,6 @@
                 <script>var d = document, w = "https://tally.so/widgets/embed.js", v = function () { "undefined" != typeof Tally ? Tally.loadEmbeds() : d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function (e) { e.src = e.dataset.tallySrc })) }; if ("undefined" != typeof Tally) v(); else if (d.querySelector('script[src="' + w + '"]') == null) { var s = d.createElement("script"); s.src = w, s.onload = v, s.onerror = v, d.body.appendChild(s); }</script>
             </div>
         </section>
-
     </main>
 
     <!-- モーダル表示用要素 -->
