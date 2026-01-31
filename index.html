@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My journal Aizu 公式サイト</title>
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* PCで3カラム、スマホは2つ並べる */
+        .rooms-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+        }
+
+        .room-item img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            cursor: pointer;
+            border-radius: 8px;
+            background: #eee;
+            display: block;
+            transition: box-shadow 0.2s;
+        }
+
+        .room-item img:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        /* タブレット等：2カラム */
+        @media (max-width: 900px) {
+            .rooms-container {
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+        }
+
+        /* スマホ：2カラム（1カラムにはしない） */
+        @media (max-width: 600px) {
+            .rooms-container {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+
+            .room-item img {
+                height: 120px;
+            }
+        }
+
+        /* モーダル用スタイル */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            animation: fadein 0.2s;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-img-wrapper {
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .modal-img {
+            max-width: 90vw;
+            max-height: 80vh;
+            border-radius: 8px;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.27);
+            background: #fff;
+        }
+
+        .close-modal-btn {
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            border: none;
+            font-size: 2em;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes fadein {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <a href="#" class="logo">My journal aizu</a>
+        <nav class="desktop-nav">
+            <ul>
+                <li><a href="#concept">コンセプト</a></li>
+                <li><a href="#news">新着情報</a></li>
+                <li><a href="#basicinfo">基本情報</a></li>
+                <li><a href="#rooms">部屋</a></li>
+                <li><a href="#photos">フォトギャラリー</a></li>
+                <li><a href="#access">アクセス</a></li>
+            </ul>
+        </nav>
+        <button class="menu-toggle" aria-label="メニューを開く" aria-controls="mobile-nav" aria-expanded="false">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+        <nav class="mobile-nav" id="mobile-nav" aria-hidden="true">
+            <ul>
+                <li><a href="#concept" onclick="closeMenu()">コンセプト</a></li>
+                <li><a href="#news" onclick="closeMenu()">新着情報</a></li>
+                <li><a href="#basicinfo" onclick="closeMenu()">基本情報</a></li>
+                <li><a href="#rooms" onclick="closeMenu()">部屋</a></li>
+                <li><a href="#photos" onclick="closeMenu()">フォトギャラリー</a></li>
+                <li><a href="#access" onclick="closeMenu()">アクセス</a></li>
+            </ul>
+        </nav>
+        <div class="overlay"></div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1600&q=80"
+                alt="Hero Image" class="hero-img">
+            <h1 class="hero-title">時を味わう、日常</h1>
+        </section>
+
+        <section id="concept" class="section">
+            <h2 class="section-title">コンセプト</h2>
+            <div class="concept-text">
+                <p>静かな時間が流れる空間で、<br>その季節にしか出会えない旬の味を。<br>私たちは、訪れる皆様の心がゆっくりと<br>ほどけていくような場所を目指しています。</p>
+            </div>
+        </section>
+
+        <section id="news" class="section">
+            <h2 class="section-title">新着情報</h2>
+            <ul class="news-list" id="news-list">
+                <p style="text-align: center;">読み込み中...</p>
+            </ul>
+        </section>
+
+        <section id="basicinfo" class="section">
+            <h2 class="section-title">基本情報</h2>
+            <table class="basicinfo-table">
+                <tr>
+                    <th>施設名</th>
+                    <td>My journal Aizu</td>
+                </tr>
+                <tr>
+                    <th>住所</th>
+                    <td>〒000-0000 〇〇県〇〇市〇〇町1-2-3</td>
+                </tr>
+                <tr>
+                    <th>電話番号</th>
+                    <td>00-0000-0000</td>
+                </tr>
+                <tr>
+                    <th>チェックイン</th>
+                    <td>15:00〜20:00</td>
+                </tr>
+                <tr>
+                    <th>チェックアウト</th>
+                    <td>〜11:00</td>
+                </tr>
+                <tr>
+                    <th>客室数</th>
+                    <td>10室 (和モダンツイン ほか)</td>
+                </tr>
+                <tr>
+                    <th>駐車場</th>
+                    <td>10台 (無料・予約不要)</td>
+                </tr>
+            </table>
+        </section>
+
+        <section id="rooms" class="section">
+            <h2 class="section-title">部屋</h2>
+            <div class="rooms-container" id="rooms-container">
+                <p style="text-align: center; grid-column: 1 / -1;">読み込み中...</p>
+            </div>
+        </section>
+
+        <section id="photos" class="section">
+            <h2 class="section-title">フォトギャラリー</h2>
+            <div class="photo-gallery" id="photo-gallery-container">
+                <p style="text-align: center; grid-column: 1 / -1;">読み込み中...</p>
+            </div>
+            <div id="gallery-more-btn-wrapper" style="text-align: center; margin-top: 24px; display: none;">
+                <button id="gallery-more-btn" class="more-btn">もっと見る</button>
+            </div>
+        </section>
+
+        <section id="access" class="section">
+            <h2 class="section-title">アクセス</h2>
+            <div class="access-info">
+                〒000-0000 〇〇県〇〇市〇〇町1-2-3<br>TEL: 00-0000-0000<br><br>JR〇〇駅より徒歩10分。
+            </div>
+            <iframe class="map-frame"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3242.9715014386834!2d139.9292391152589!3d37.494367979813096!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5f89f705ab965375%3A0x4b3c5d0c5ad49057!2z44CSOTY0LTAwMjIg56aP5bKh55yM5p2x5bGx5biC5bGx5bO255S6!5e0!3m2!1sja!2sjp!4v1683523500000!5m2!1sja!2sjp"
+                allowfullscreen="" loading="lazy" title="Google Map"></iframe>
+        </section>
+
+        <section id="contact" class="section">
+            <h2 class="section-title">お問い合わせ</h2>
+            <div class="contact-form-wrapper">
+                <iframe
+                    data-tally-src="https://tally.so/embed/lbre7k?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
+                    loading="lazy" width="100%" height="622" frameborder="0" marginheight="0" marginwidth="0"
+                    title="お問合せ"></iframe>
+                <script>var d = document, w = "https://tally.so/widgets/embed.js", v = function () { "undefined" != typeof Tally ? Tally.loadEmbeds() : d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function (e) { e.src = e.dataset.tallySrc })) }; if ("undefined" != typeof Tally) v(); else if (d.querySelector('script[src="' + w + '"]') == null) { var s = d.createElement("script"); s.src = w, s.onload = v, s.onerror = v, d.body.appendChild(s); }</script>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- モーダル表示用要素 -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-img-wrapper">
+            <button class="close-modal-btn" id="close-modal-btn" aria-label="閉じる">&times;</button>
+            <img class="modal-img" id="modal-img" src="" alt="">
+            <div class="modal-caption" id="modal-caption" style="color:white;margin-top:10px;"></div>
+        </div>
+    </div>
+
+    <footer>
+        <span class="footer-logo">My journal Aizu</span>
+        <div class="copyright">© 2026 My journal Aizu All Rights Reserved.</div>
+    </footer>
+
+    <script>
+        /* --- 共通設定 --- */
+        const MICROCMS_CONFIG = {
+            serviceId: "aizu-tsurugajo-inn",
+            apiKey: "N0DjcWDusrLYS2MsJBrmptKGPtt1G0dbkbwv"
+        };
+
+        /* --- メニュー制御 --- */
+        const menuToggle = document.querySelector('.menu-toggle');
+        const mobileNav = document.getElementById('mobile-nav');
+        const overlay = document.querySelector('.overlay');
+
+        function openMenu() {
+            menuToggle.classList.add('open');
+            mobileNav.classList.add('open');
+            overlay.classList.add('open');
+            mobileNav.setAttribute('aria-hidden', 'false');
+            menuToggle.setAttribute('aria-expanded', 'true');
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeMenu() {
+            menuToggle.classList.remove('open');
+            mobileNav.classList.remove('open');
+            overlay.classList.remove('open');
+            mobileNav.setAttribute('aria-hidden', 'true');
+            menuToggle.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = "";
+        }
+
+        menuToggle.addEventListener('click', () => {
+            mobileNav.classList.contains('open') ? closeMenu() : openMenu();
+        });
+        overlay.addEventListener('click', closeMenu);
+
+        // モーダル拡大表示機能
+        function openModal(imageUrl, captionText) {
+            const modalOverlay = document.getElementById('modal-overlay');
+            const modalImg = document.getElementById('modal-img');
+            const modalCaption = document.getElementById('modal-caption');
+            modalImg.src = imageUrl;
+            modalImg.alt = captionText || '';
+            modalCaption.textContent = captionText || '';
+            modalOverlay.classList.add('open');
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeModal() {
+            const modalOverlay = document.getElementById('modal-overlay');
+            const modalImg = document.getElementById('modal-img');
+            modalImg.src = '';
+            modalImg.alt = '';
+            document.getElementById('modal-caption').textContent = '';
+            modalOverlay.classList.remove('open');
+            document.body.style.overflow = "";
+        }
+
+        // モーダル閉じるボタン/オーバーレイ押下でクローズ
+        document.getElementById('close-modal-btn').addEventListener('click', closeModal);
+        document.getElementById('modal-overlay').addEventListener('click', function (e) {
+            if (e.target === this) closeModal();
+        });
+
+        // ESCで閉じる
+        document.addEventListener('keydown', function (e) {
+            if (e.key === "Escape") {
+                closeModal();
+            }
+        });
+
+        /* --- 新着情報取得 --- */
+        fetch(`https://${MICROCMS_CONFIG.serviceId}.microcms.io/api/v1/news`, {
+            headers: { "X-MICROCMS-API-KEY": MICROCMS_CONFIG.apiKey }
+        })
+            .then(res => res.json())
+            .then(data => {
+                const list = document.getElementById('news-list');
+                list.innerHTML = "";
+                data.contents.forEach(item => {
+                    const date = new Date(item.publishedAt).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' });
+                    const li = document.createElement('li');
+                    li.className = 'news-item';
+                    li.innerHTML = `<div class="news-date">${date}</div><div class="news-content"><a href="news-detail.html?id=${item.id}" class="news-link">${item.title}</a></div>`;
+                    list.appendChild(li);
+                });
+            });
+
+        /* --- お部屋情報取得 --- */
+        fetch(`https://${MICROCMS_CONFIG.serviceId}.microcms.io/api/v1/rooms`, {
+            headers: { "X-MICROCMS-API-KEY": MICROCMS_CONFIG.apiKey }
+        })
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('rooms-container');
+                container.innerHTML = "";
+                data.contents.forEach(room => {
+                    const div = document.createElement('div');
+                    div.className = 'room-item';
+                    // 部屋の写真にもモーダルを追加
+                    div.innerHTML = `
+                    <img src="${room.image.url}" alt="${room.title}">
+                    <h3>${room.title}</h3>
+                    <p>${room.description.replace(/\n/g, '<br>')}</p>
+                `;
+                    // 部屋画像クリックでモーダル表示
+                    div.querySelector('img').addEventListener('click', () => {
+                        openModal(room.image.url, room.title);
+                    });
+                    container.appendChild(div);
+                });
+            });
+
+        /* --- フォトギャラリー取得 (フィールドID: caption 対応版) --- */
+        fetch(`https://${MICROCMS_CONFIG.serviceId}.microcms.io/api/v1/photo`, {
+            headers: { "X-MICROCMS-API-KEY": MICROCMS_CONFIG.apiKey }
+        })
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('photo-gallery-container');
+                const moreBtnWrapper = document.getElementById('gallery-more-btn-wrapper');
+                const moreBtn = document.getElementById('gallery-more-btn');
+
+                container.innerHTML = "";
+
+                data.contents.forEach((photo, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'photo-item';
+
+                    // 最初の3枚だけ表示する設定
+                    if (index < 3) div.classList.add('is-visible');
+
+                    // --- 修正箇所 ---
+                    // フィールドIDが 'caption' なので、photo.caption を取得します。
+                    // データが空の場合に備えて || "" を付けておきます。
+                    const text = photo.caption || "";
+
+                    div.innerHTML = `
+                <img src="${photo.image.url}" alt="${text}">
+                ${text ? `<div class="photo-caption">${text}</div>` : ""}
+            `;
+
+                    // フォトギャラリー画像クリックでモーダル表示
+                    div.querySelector('img').addEventListener('click', (e) => {
+                        // e.stopPropagation(); // ここでの伝播は無効化してもよいが必須ではない
+                        openModal(photo.image.url, text);
+                    });
+
+                    container.appendChild(div);
+                });
+
+                // 4枚以上あれば「もっと見る」ボタンを出す
+                if (data.contents.length > 3) {
+                    moreBtnWrapper.style.display = "block";
+                }
+
+                // ボタンクリックで残りの写真をすべて表示
+                moreBtn.addEventListener('click', () => {
+                    const hiddenItems = container.querySelectorAll('.photo-item');
+                    hiddenItems.forEach(item => item.classList.add('is-visible'));
+                    moreBtnWrapper.style.display = "none";
+                });
+            })
+            .catch(err => {
+                console.error("データの取得に失敗しました:", err);
+            });
+    </script>
+</body>
+
+</html>
