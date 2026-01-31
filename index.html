@@ -129,7 +129,7 @@
             background: rgba(255,255,255,0.92);
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(25,80,133,0.03);
-            max-width: 760px; /* << ここを広く */
+            max-width: 760px;
             width: 96%;
             margin: 40px auto 0 auto;
             padding: 40px 32px 40px 32px;
@@ -181,6 +181,30 @@
             padding-right: 0 !important;
         }
 
+        /* アクセス（地図）を横幅広げる */
+        #access .map-frame {
+            display: block;
+            margin: 28px auto 0 auto;
+            width: 90vw;
+            max-width: 1000px;
+            min-width: 280px;
+            height: 450px;
+            border-radius: 12px;
+            border: 0;
+        }
+        @media (max-width: 1100px) {
+            #access .map-frame {
+                max-width: 98vw;
+            }
+        }
+        @media (max-width: 600px) {
+            #access .map-frame {
+                width: 100vw;
+                height: 260px;
+                border-radius: 6px;
+                margin-top: 18px;
+            }
+        }
     </style>
 </head>
 
@@ -293,9 +317,10 @@
             <div class="access-info">
                 〒000-0000 〇〇県〇〇市〇〇町1-2-3<br>TEL: 00-0000-0000<br><br>JR〇〇駅より徒歩10分。
             </div>
+            <!-- 地図を横幅広めで最新の場所に変更 -->
             <iframe class="map-frame"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3242.9715014386834!2d139.9292391152589!3d37.494367979813096!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5f89f705ab965375%3A0x4b3c5d0c5ad49057!2z44CSOTY0LTAwMjIg56aP5bKh55yM5p2x5bGx5biC5bGx5bO255S6!5e0!3m2!1sja!2sjp!4v1683523500000!5m2!1sja!2sjp"
-                allowfullscreen="" loading="lazy" title="Google Map"></iframe>
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4249.281408628393!2d139.92097769999998!3d37.500296899999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5ff5530067ce8edf%3A0x7a7ccb234b4a32df!2z5Lya5rSl5LiD5pel55S6SU5O!5e1!3m2!1sja!2sjp!4v1769838584881!5m2!1sja!2sjp"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Google Map"></iframe>
         </section>
 
         <!-- お問い合わせセクション: カスタム雰囲気のsectionにクラスを追加 -->
