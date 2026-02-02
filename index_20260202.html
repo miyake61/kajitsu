@@ -111,8 +111,7 @@
 
         /* --- お問い合わせセクションの雰囲気・背景色（もっと薄い青） --- */
         #contact.contact-section-custom {
-            background: #f5faff;
-            /* すごく薄い青 */
+            background: #f5faff; /* すごく薄い青 */
             border-radius: 24px;
             margin-top: 48px;
             margin-bottom: 48px;
@@ -121,17 +120,15 @@
             position: relative;
             overflow: hidden;
         }
-
         #contact.contact-section-custom .section-title {
             color: #195085;
             letter-spacing: 0.14em;
         }
-
         /* フォーム部分を広めに・余白調整 */
         #contact.contact-section-custom .contact-form-wrapper {
-            background: rgba(255, 255, 255, 0.92);
+            background: rgba(255,255,255,0.92);
             border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(25, 80, 133, 0.03);
+            box-shadow: 0 4px 20px rgba(25,80,133,0.03);
             max-width: 760px;
             width: 96%;
             margin: 40px auto 0 auto;
@@ -140,15 +137,12 @@
             justify-content: center;
             align-items: center;
         }
-
-        #contact.contact-section-custom::before,
-        #contact.contact-section-custom::after {
+        #contact.contact-section-custom::before, #contact.contact-section-custom::after {
             content: '';
             position: absolute;
             z-index: 0;
             border-radius: 50%;
         }
-
         #contact.contact-section-custom::before {
             width: 180px;
             height: 120px;
@@ -157,7 +151,6 @@
             background: rgba(198, 229, 255, 0.20);
             filter: blur(14px);
         }
-
         #contact.contact-section-custom::after {
             width: 140px;
             height: 90px;
@@ -166,27 +159,23 @@
             background: rgba(220, 235, 255, 0.22);
             filter: blur(16px);
         }
-
-        @media (max-width:900px) {
+        @media (max-width:900px){
             #contact.contact-section-custom .contact-form-wrapper {
                 max-width: 99vw;
                 padding: 18px 0 18px 0;
             }
         }
-
-        @media (max-width:700px) {
+        @media (max-width:700px){
             #contact.contact-section-custom {
                 margin: 28px 0 28px 0;
                 padding: 25px 0 18px 0;
                 border-radius: 14px;
             }
-
             #contact.contact-section-custom .contact-form-wrapper {
                 max-width: 99vw;
                 padding: 8px 0 8px 0;
             }
         }
-
         #contact.contact-section-custom.section {
             padding-left: 0 !important;
             padding-right: 0 !important;
@@ -203,13 +192,11 @@
             border-radius: 12px;
             border: 0;
         }
-
         @media (max-width: 1100px) {
             #access .map-frame {
                 max-width: 98vw;
             }
         }
-
         @media (max-width: 600px) {
             #access .map-frame {
                 width: 100vw;
@@ -269,8 +256,9 @@
 
         <section id="news" class="section">
             <h2 class="section-title">新着情報</h2>
-            <ul class="news-list" id="news-list"><!-- NEWS_LIST --></ul>
-
+            <ul class="news-list" id="news-list">
+                <p style="text-align: center;">読み込み中...</p>
+            </ul>
         </section>
 
         <section id="basicinfo" class="section">
@@ -309,14 +297,16 @@
 
         <section id="rooms" class="section">
             <h2 class="section-title">部屋</h2>
-            <div class="rooms-container" id="rooms-container"><!-- ROOMS_LIST --></div>
-
+            <div class="rooms-container" id="rooms-container">
+                <p style="text-align: center; grid-column: 1 / -1;">読み込み中...</p>
+            </div>
         </section>
 
         <section id="photos" class="section">
             <h2 class="section-title">フォトギャラリー</h2>
-            <div class="photo-gallery" id="photo-gallery-container"><!-- PHOTO_LIST --></div>
-
+            <div class="photo-gallery" id="photo-gallery-container">
+                <p style="text-align: center; grid-column: 1 / -1;">読み込み中...</p>
+            </div>
             <div id="gallery-more-btn-wrapper" style="text-align: center; margin-top: 24px; display: none;">
                 <button id="gallery-more-btn" class="more-btn">もっと見る</button>
             </div>
@@ -330,8 +320,7 @@
             <!-- 地図を横幅広めで最新の場所に変更 -->
             <iframe class="map-frame"
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4249.281408628393!2d139.92097769999998!3d37.500296899999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5ff5530067ce8edf%3A0x7a7ccb234b4a32df!2z5Lya5rSl5LiD5pel55S6SU5O!5e1!3m2!1sja!2sjp!4v1769838584881!5m2!1sja!2sjp"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="Google Map"></iframe>
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Google Map"></iframe>
         </section>
 
         <!-- お問い合わせセクション: カスタム雰囲気のsectionにクラスを追加 -->
@@ -362,6 +351,12 @@
     </footer>
 
     <script>
+        /* --- 共通設定 --- */
+        const MICROCMS_CONFIG = {
+            serviceId: "aizu-tsurugajo-inn",
+            apiKey: "N0DjcWDusrLYS2MsJBrmptKGPtt1G0dbkbwv"
+        };
+
         /* --- メニュー制御 --- */
         const menuToggle = document.querySelector('.menu-toggle');
         const mobileNav = document.getElementById('mobile-nav');
@@ -390,7 +385,7 @@
         });
         overlay.addEventListener('click', closeMenu);
 
-        /* --- モーダル拡大表示機能 --- */
+        // モーダル拡大表示機能
         function openModal(imageUrl, captionText) {
             const modalOverlay = document.getElementById('modal-overlay');
             const modalImg = document.getElementById('modal-img');
@@ -412,32 +407,115 @@
             document.body.style.overflow = "";
         }
 
+        // モーダル閉じるボタン/オーバーレイ押下でクローズ
         document.getElementById('close-modal-btn').addEventListener('click', closeModal);
         document.getElementById('modal-overlay').addEventListener('click', function (e) {
             if (e.target === this) closeModal();
         });
 
+        // ESCで閉じる
         document.addEventListener('keydown', function (e) {
-            if (e.key === "Escape") closeModal();
+            if (e.key === "Escape") {
+                closeModal();
+            }
         });
 
-        /* --- フォトギャラリー「もっと見る」ボタンの制御 --- */
-        // ※SSGで既にHTMLが作られている前提の動きです
-        document.addEventListener('DOMContentLoaded', () => {
-            const moreBtn = document.getElementById('gallery-more-btn');
-            const moreBtnWrapper = document.getElementById('gallery-more-btn-wrapper');
-            const container = document.getElementById('photo-gallery-container');
+        /* --- 新着情報取得 --- */
+        fetch(`https://${MICROCMS_CONFIG.serviceId}.microcms.io/api/v1/news`, {
+            headers: { "X-MICROCMS-API-KEY": MICROCMS_CONFIG.apiKey }
+        })
+            .then(res => res.json())
+            .then(data => {
+                const list = document.getElementById('news-list');
+                list.innerHTML = "";
+                data.contents.forEach(item => {
+                    const date = new Date(item.publishedAt).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' });
+                    const li = document.createElement('li');
+                    li.className = 'news-item';
+                    li.innerHTML = `<div class="news-date">${date}</div><div class="news-content"><a href="news-detail.html?id=${item.id}" class="news-link">${item.title}</a></div>`;
+                    list.appendChild(li);
+                });
+            });
 
-            if (moreBtn) {
+        /* --- お部屋情報取得 --- */
+        fetch(`https://${MICROCMS_CONFIG.serviceId}.microcms.io/api/v1/rooms`, {
+            headers: { "X-MICROCMS-API-KEY": MICROCMS_CONFIG.apiKey }
+        })
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('rooms-container');
+                container.innerHTML = "";
+                data.contents.forEach(room => {
+                    const div = document.createElement('div');
+                    div.className = 'room-item';
+                    // 部屋の写真にもモーダルを追加
+                    div.innerHTML = `
+                    <img src="${room.image.url}" alt="${room.title}">
+                    <h3>${room.title}</h3>
+                    <p>${room.description.replace(/\n/g, '<br>')}</p>
+                `;
+                    // 部屋画像クリックでモーダル表示
+                    div.querySelector('img').addEventListener('click', () => {
+                        openModal(room.image.url, room.title);
+                    });
+                    container.appendChild(div);
+                });
+            });
+
+        /* --- フォトギャラリー取得 (フィールドID: caption 対応版) --- */
+        fetch(`https://${MICROCMS_CONFIG.serviceId}.microcms.io/api/v1/photo`, {
+            headers: { "X-MICROCMS-API-KEY": MICROCMS_CONFIG.apiKey }
+        })
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('photo-gallery-container');
+                const moreBtnWrapper = document.getElementById('gallery-more-btn-wrapper');
+                const moreBtn = document.getElementById('gallery-more-btn');
+
+                container.innerHTML = "";
+
+                data.contents.forEach((photo, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'photo-item';
+
+                    // 最初の3枚だけ表示する設定
+                    if (index < 3) div.classList.add('is-visible');
+
+                    // --- 修正箇所 ---
+                    // フィールドIDが 'caption' なので、photo.caption を取得します。
+                    // データが空の場合に備えて || "" を付けておきます。
+                    const text = photo.caption || "";
+
+                    div.innerHTML = `
+                <img src="${photo.image.url}" alt="${text}">
+                ${text ? `<div class="photo-caption">${text}</div>` : ""}
+            `;
+
+                    // フォトギャラリー画像クリックでモーダル表示
+                    div.querySelector('img').addEventListener('click', (e) => {
+                        // e.stopPropagation(); // ここでの伝播は無効化してもよいが必須ではない
+                        openModal(photo.image.url, text);
+                    });
+
+                    container.appendChild(div);
+                });
+
+                // 4枚以上あれば「もっと見る」ボタンを出す
+                if (data.contents.length > 3) {
+                    moreBtnWrapper.style.display = "block";
+                }
+
+                // ボタンクリックで残りの写真をすべて表示
                 moreBtn.addEventListener('click', () => {
                     const hiddenItems = container.querySelectorAll('.photo-item');
                     hiddenItems.forEach(item => item.classList.add('is-visible'));
                     moreBtnWrapper.style.display = "none";
                 });
-            }
-        });
+            })
+            .catch(err => {
+                console.error("データの取得に失敗しました:", err);
+            });
     </script>
-
 </body>
 
 </html>

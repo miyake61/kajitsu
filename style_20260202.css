@@ -1,0 +1,479 @@
+/* --- 共通設定 --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Shippori Mincho', serif;
+    background-color: #fcfaf5;
+    color: #333;
+    line-height: 1.8;
+    letter-spacing: 0.1em;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* --- ヘッダー --- */
+header {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    padding: 12px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(252, 250, 245, 0.95);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    z-index: 100;
+    min-height: 32px;
+    box-shadow: 0 1.5px 10px 3px rgba(205, 194, 151, 0.11);
+}
+
+.logo {
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: #333;
+    letter-spacing: 0.1em;
+    z-index: 120;
+}
+
+/* ナビゲーション */
+nav ul {
+    display: flex;
+    list-style: none;
+}
+
+nav ul li {
+    margin-left: 22px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 0.9rem;
+    transition: opacity 0.3s;
+}
+
+/* ハンバーガーボタン */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 130;
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.menu-toggle .bar {
+    display: block;
+    width: 26px;
+    height: 3.2px;
+    margin: 0 auto 6px auto;
+    background: #333;
+    border-radius: 2px;
+    transition: 0.25s cubic-bezier(.68, -0.55, .27, 1.55);
+}
+
+.menu-toggle.open .bar:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+}
+
+.menu-toggle.open .bar:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-toggle.open .bar:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+}
+
+/* モバイルナビ */
+nav.mobile-nav {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background: rgba(252, 250, 245, 0.98);
+    box-shadow: -4px 0 24px 2px rgba(205, 194, 151, 0.18);
+    width: 80vw;
+    max-width: 320px;
+    height: 100vh;
+    z-index: 200;
+    flex-direction: column;
+    padding: 60px 20px 20px 30px;
+    transition: transform 0.32s cubic-bezier(.6, .2, .27, 1.16);
+    transform: translateX(100%);
+}
+
+nav.mobile-nav.open {
+    display: flex;
+    transform: translateX(0);
+}
+
+nav.mobile-nav ul {
+    flex-direction: column;
+}
+
+nav.mobile-nav ul li {
+    margin: 0 0 25px 0;
+}
+
+nav.mobile-nav ul li a {
+    font-size: 1.1rem;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    z-index: 110;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(60, 47, 27, 0.30);
+}
+
+.overlay.open {
+    display: block;
+}
+
+/* --- ヒーロー・セクション共通 --- */
+.hero {
+    height: 75vh;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    filter: brightness(0.9);
+}
+
+.hero-title {
+    writing-mode: vertical-rl;
+    color: #fff;
+    font-size: 2.5rem;
+    letter-spacing: 0.5em;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.section {
+    padding: 90px 20px 50px;
+    max-width: 1150px;
+    margin: 0 auto;
+}
+
+.section-title {
+    font-size: 1.8rem;
+    margin-bottom: 35px;
+    text-align: center;
+}
+
+/* --- お部屋紹介 (Rooms) --- */
+.rooms-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.room-item {
+    background: #fffdfa;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(230, 210, 160, 0.06);
+}
+
+.room-item img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.room-item img:hover {
+    transform: scale(1.03);
+}
+
+/* --- フォトギャラリー (Photo Gallery) --- */
+.photo-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.photo-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    cursor: pointer;
+    display: none;
+    /* JSで.is-visibleが付与されるまで非表示 */
+}
+
+.photo-item.is-visible {
+    display: block;
+}
+
+.photo-item img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.photo-item:hover img {
+    transform: scale(1.05);
+}
+
+/* 写真右下のキャプション */
+.photo-caption {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    pointer-events: none;
+}
+
+/* もっと見るボタン */
+.more-btn {
+    padding: 12px 40px;
+    background: transparent;
+    border: 1px solid #947b5e;
+    color: #947b5e;
+    cursor: pointer;
+    font-family: 'Shippori Mincho', serif;
+    transition: all 0.3s;
+    margin-top: 20px;
+}
+
+.more-btn:hover {
+    background: #947b5e;
+    color: #fff;
+}
+
+/* --- モーダル (拡大表示) --- */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: rgba(0, 0, 0, 0.85);
+    justify-content: center;
+    align-items: center;
+    animation: fadein 0.2s;
+}
+
+.modal-overlay.open {
+    display: flex;
+}
+
+.modal-img-wrapper {
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.modal-img {
+    max-width: 90vw;
+    max-height: 80vh;
+    border-radius: 8px;
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
+    background: #fff;
+}
+
+.close-modal-btn {
+    background: none;
+    color: #fff;
+    border: none;
+    font-size: 2.5rem;
+    cursor: pointer;
+    margin-bottom: 5px;
+    line-height: 1;
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* --- お知らせ・基本情報 --- */
+.news-list {
+    max-width: 700px;
+    margin: 0 auto;
+    list-style: none;
+}
+
+.news-item {
+    display: flex;
+    border-bottom: 1px solid #e3dfd5;
+    padding: 16px 0;
+}
+
+.news-date {
+    color: #947b5e;
+    margin-right: 25px;
+    min-width: 100px;
+}
+
+.news-link {
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s;
+}
+
+.news-link:hover {
+    color: #947b5e;
+    text-decoration: underline;
+}
+
+.basicinfo-table {
+    width: 100%;
+    max-width: 650px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background: #fffdfa;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.basicinfo-table th,
+.basicinfo-table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid #ede5d5;
+    text-align: left;
+}
+
+.basicinfo-table th {
+    background: #faf6ea;
+    width: 28%;
+}
+
+/* --- フッター --- */
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.footer-logo {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.copyright {
+    font-size: 0.8rem;
+    opacity: 0.6;
+    margin-top: 40px;
+}
+
+/* --- メディアクエリ (スマホ・タブレット対応) --- */
+@media (max-width: 900px) {
+    .rooms-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .photo-gallery {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        padding: 8px 16px;
+    }
+
+    .desktop-nav {
+        display: none !important;
+    }
+
+    .menu-toggle {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .section {
+        padding-top: 65px;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .rooms-container,
+    .photo-gallery {
+        grid-template-columns: 1fr 1fr;
+        /* スマホも2列維持 */
+    }
+
+    .room-item img,
+    .photo-item img {
+        height: 140px;
+    }
+}
+
+/* --- アクセスセクション（PC・スマホ共通で中央にする） --- */
+
+/* 1. テキスト（タイトルと住所）を中央に寄せる */
+#access {
+    text-align: center;
+}
+
+/* 2. 地図を中央に寄せて大きくする */
+.map-frame {
+    display: block;    /* 中央寄せに必須 */
+    margin: 40px auto; /* 上下に40pxの余白を作り、左右を自動調整して中央へ */
+    width: 100%;       /* 横幅いっぱい */
+    max-width: 900px;  /* 大きくなりすぎないよう制限（お好みで） */
+    height: 500px;     /* 高さをしっかり確保 */
+    border: none;      /* 枠線を消してスッキリさせる */
+}
+
+/* --- コンセプトセクションも中央揃え --- */
+#concept {
+    text-align: center;
+}
+
+.concept-text {
+    margin: 0 auto; /* すでにあるはずですが、念のため */
+    /* もし一行ずつを中央寄せにしたいなら、以下を追加 */
+    /* text-align: center; */
+}
