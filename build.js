@@ -3,6 +3,7 @@
 // 以下に要点を整理します。
 
 const fs = require('fs');
+const path = require('path');
 
 // --- microCMSの設定（あなたの情報を直接入れています） ---
 const SERVICE_ID = "aizu-tsurugajo-inn";
@@ -69,6 +70,20 @@ async function build() {
         // 必要な静的ファイルも dist にコピー
         if (fs.existsSync('style.css')) fs.copyFileSync('style.css', 'dist/style.css');
         if (fs.existsSync('news-detail.html')) fs.copyFileSync('news-detail.html', 'dist/news-detail.html');
+        
+        // imagesフォルダをコピー
+        if (fs.existsSync('images')) {
+            const distImagesPath = 'dist/images';
+            if (!fs.existsSync(distImagesPath)) fs.mkdirSync(distImagesPath, { recursive: true });
+            
+            const imageFiles = fs.readdirSync('images');
+            imageFiles.forEach(file => {
+                const srcPath = path.join('images', file);
+                const destPath = path.join(distImagesPath, file);
+                fs.copyFileSync(srcPath, destPath);
+            });
+            console.log('imagesフォルダをコピーしました');
+        }
 
         console.log("調理完了！ dist フォルダに爆速版サイトが出来上がりました。");
     } catch (error) {
