@@ -109,87 +109,26 @@
             }
         }
 
-        /* --- お問い合わせセクションの雰囲気・背景色（もっと薄い青） --- */
-        #contact.contact-section-custom {
-            background: #f5faff;
-            /* すごく薄い青 */
-            border-radius: 24px;
-            margin-top: 48px;
-            margin-bottom: 48px;
-            box-shadow: 0 6px 32px rgba(65, 97, 129, 0.10);
-            padding: 48px 0 36px 0;
-            position: relative;
-            overflow: hidden;
+        /* メールアドレス表示部分 */
+        .contact-email-wrapper {
+            text-align: center;
+            margin-top: 20px;
         }
 
-        #contact.contact-section-custom .section-title {
-            color: #195085;
-            letter-spacing: 0.14em;
+        .contact-email {
+            font-size: 1.2rem;
+            color: #333;
+            text-decoration: none;
+            transition: opacity 0.3s;
         }
 
-        /* フォーム部分を広めに・余白調整 */
-        #contact.contact-section-custom .contact-form-wrapper {
-            background: rgba(255, 255, 255, 0.92);
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(25, 80, 133, 0.03);
-            max-width: 760px;
-            width: 96%;
-            margin: 40px auto 0 auto;
-            padding: 40px 32px 40px 32px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .contact-email:hover {
+            opacity: 0.7;
         }
 
-        #contact.contact-section-custom::before,
-        #contact.contact-section-custom::after {
-            content: '';
-            position: absolute;
-            z-index: 0;
-            border-radius: 50%;
-        }
-
-        #contact.contact-section-custom::before {
-            width: 180px;
-            height: 120px;
-            top: -40px;
-            left: -60px;
-            background: rgba(198, 229, 255, 0.20);
-            filter: blur(14px);
-        }
-
-        #contact.contact-section-custom::after {
-            width: 140px;
-            height: 90px;
-            bottom: -30px;
-            right: -40px;
-            background: rgba(220, 235, 255, 0.22);
-            filter: blur(16px);
-        }
-
-        @media (max-width:900px) {
-            #contact.contact-section-custom .contact-form-wrapper {
-                max-width: 99vw;
-                padding: 18px 0 18px 0;
-            }
-        }
-
-        @media (max-width:700px) {
-            #contact.contact-section-custom {
-                margin: 28px 0 28px 0;
-                padding: 25px 0 18px 0;
-                border-radius: 14px;
-            }
-
-            #contact.contact-section-custom .contact-form-wrapper {
-                max-width: 99vw;
-                padding: 8px 0 8px 0;
-            }
-        }
-
-        #contact.contact-section-custom.section {
-            padding-left: 0 !important;
-            padding-right: 0 !important;
+        .contact-email-icon {
+            display: inline-block;
+            margin-right: 8px;
         }
 
         /* アクセス（地図）を横幅広げる */
@@ -391,20 +330,20 @@
             </div>
             <!-- 地図を横幅広めで最新の場所に変更 -->
             <iframe class="map-frame"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4249.281408628393!2d139.92097769999998!3d37.500296899999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5ff5530067ce8edf%3A0x7a7ccb234b4a32df!2z5Lya5rSl5LiD5pel55S6SU5O!5e1!3m2!1sja!2sjp!4v1769838584881!5m2!1sja!2sjp"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3863.4749041017376!2d139.56998579999998!3d35.2805333!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60184757b398622b%3A0xa8cea423508cc858!2z44OV44Kh44OW44O844Or6JGJ5bGx5Yil6YK4!5e1!3m2!1sja!2sjp!4v1771263479864!5m2!1sja!2sjp"
                 allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
                 title="Google Map"></iframe>
         </section>
 
-        <!-- お問い合わせセクション: カスタム雰囲気のsectionにクラスを追加 -->
-        <section id="contact" class="section contact-section-custom">
+        <!-- お問い合わせセクション: メールアドレス表示 -->
+        <section id="contact" class="section">
             <h2 class="section-title">お問い合わせ</h2>
-            <div class="contact-form-wrapper">
-                <iframe
-                    data-tally-src="https://tally.so/embed/lbre7k?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
-                    loading="lazy" width="100%" height="622" frameborder="0" marginheight="0" marginwidth="0"
-                    title="お問合せ"></iframe>
-                <script>var d = document, w = "https://tally.so/widgets/embed.js", v = function () { "undefined" != typeof Tally ? Tally.loadEmbeds() : d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function (e) { e.src = e.dataset.tallySrc })) }; if ("undefined" != typeof Tally) v(); else if (d.querySelector('script[src="' + w + '"]') == null) { var s = d.createElement("script"); s.src = w, s.onload = v, s.onerror = v, d.body.appendChild(s); }</script>
+            <div class="contact-email-wrapper">
+                <p style="margin-bottom: 20px;">お問い合わせは、以下のメールアドレスまでご連絡ください。</p>
+                <a href="mailto:faveur.hayama@gmail.com" class="contact-email">
+                    <span class="contact-email-icon">✉</span>
+                    faveur.hayama@gmail.com
+                </a>
             </div>
         </section>
     </main>
