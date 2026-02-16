@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My journal Aizu 公式サイト</title>
+    <title>Faveur Hayama 公式ホームページ</title>
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
@@ -218,13 +218,72 @@
                 margin-top: 18px;
             }
         }
+
+        /* Google翻訳言語選択のスタイル */
+        .google-translate-wrapper {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 150;
+            background: rgba(252, 250, 245, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .google-translate-wrapper {
+                top: 60px;
+                right: 10px;
+                padding: 6px;
+            }
+        }
+
+        /* Google翻訳のデフォルトスタイルを上書き */
+        #google_translate_element {
+            font-size: 14px;
+        }
+
+        .goog-te-banner-frame {
+            display: none !important;
+        }
+
+        .goog-te-balloon-frame {
+            display: none !important;
+        }
+
+        .goog-te-menu-value {
+            color: #333 !important;
+        }
+
+        .goog-te-menu2 {
+            max-width: 100% !important;
+        }
+
+        .goog-te-menu2-item {
+            font-size: 14px !important;
+            padding: 8px !important;
+        }
     </style>
+    <!-- Google翻訳スクリプト -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'ja',
+                includedLanguages: 'ja,en,zh-CN,ko,fr,es,de,it,pt,ru',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </head>
 
 <body>
 
     <header>
-        <a href="#" class="logo">My journal aizu</a>
+        <a href="#" class="logo">Faveur Hayama</a>
         <nav class="desktop-nav">
             <ul>
                 <li><a href="#concept">コンセプト</a></li>
@@ -250,12 +309,15 @@
                 <li><a href="#access" onclick="closeMenu()">アクセス</a></li>
             </ul>
         </nav>
+        <div class="google-translate-wrapper">
+            <div id="google_translate_element"></div>
+        </div>
         <div class="overlay"></div>
     </header>
 
     <main>
         <section class="hero">
-            <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1600&q=80"
+            <img src="images/0052.jpg"
                 alt="Hero Image" class="hero-img">
             <h1 class="hero-title">時を味わう、日常</h1>
         </section>
@@ -278,7 +340,7 @@
             <table class="basicinfo-table">
                 <tr>
                     <th>施設名</th>
-                    <td>My journal Aizu</td>
+                    <td>Faveur Hayama</td>
                 </tr>
                 <tr>
                     <th>住所</th>
@@ -357,8 +419,8 @@
     </div>
 
     <footer>
-        <span class="footer-logo">My journal Aizu</span>
-        <div class="copyright">© 2026 My journal Aizu All Rights Reserved.</div>
+        <span class="footer-logo">Faveur Hayama</span>
+        <div class="copyright">© 2026 Faveur Hayama All Rights Reserved.</div>
     </footer>
 
     <script>
