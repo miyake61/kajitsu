@@ -30,15 +30,13 @@ async function build() {
             </li>`;
         }).join('');
 
-        // お部屋情報の構成をフォトギャラリーに合わせる
+        // お部屋情報の構成を「フォトギャラリー（photo-item）」に完全に統一
         const roomsHtml = roomsData.contents.map((room, index) => {
-            // 【重要】新しいフィールドIDが「title」でない場合は、ここを修正してください
-            const text = room.caption || "";
-
+            const text = room.caption || ""; // microCMSのフィールドIDがcaptionの場合
             return `
-        <div class="room-item ${index < 3 ? 'is-visible' : ''}">
+        <div class="photo-item ${index < 3 ? 'is-visible' : ''}">
             <img src="${room.image.url}" alt="${text}" onclick="openModal('${room.image.url}', '${text}')">
-            ${text ? `<div class="room-caption">${text}</div>` : ""}
+            ${text ? `<div class="photo-caption">${text}</div>` : ""}
         </div>
     `;
         }).join('');
