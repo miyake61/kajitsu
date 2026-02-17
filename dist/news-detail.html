@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>お知らせ詳細 | My journal Aizu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        html, body {
+            width: 100%;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+        /* 全体の余白と中央寄せ */
+        .container {
+            margin-bottom: 120px;
+            max-width: 720px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 24px;
+            padding-right: 24px;
+            box-sizing: border-box;
+        }
+        /* 記事タイトルや戻るリンクも折り返す */
+        .article-title {
+            word-break: break-word;
+            font-size: 2rem;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 2em;
+            word-break: break-word;
+            font-size: 1rem;
+        }
+        .article-content {
+            word-break: break-word;
+            font-size: 1.07rem;
+            overflow-wrap: break-word;
+        }
+        .article-eyecatch {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 24px auto;
+            border-radius: 8px;
+        }
+        /* モバイル対応: パディング調整 ＆ フォントサイズ縮小で横スクロール出さない */
+        @media (max-width: 800px) {
+            .container {
+                max-width: 100%;
+                padding-left: 5vw;
+                padding-right: 5vw;
+            }
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding-left: 4vw;
+                padding-right: 4vw;
+            }
+            .article-title {
+                font-size: 1.25rem;
+            }
+            .article-content {
+                font-size: 0.97rem;
+            }
+            .back-link {
+                font-size: 0.93rem;
+            }
+        }
+        /* 画像・テーブルなどがオーバーフローしないように */
+        .article-content img, .article-content video, .article-content iframe {
+            max-width: 100%;
+            height: auto;
+        }
+        .article-content table {
+            max-width: 100%;
+            display: block;
+            overflow-x: auto;
+            border-collapse: collapse;
+        }
+        /* サイト全体で横にはみ出す要素を抑止 */
+        * {
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="index.html" class="logo">My journal aizu</a>
+        <nav class="desktop-nav">
+            <ul>
+                <li><a href="index.html#concept">コンセプト</a></li>
+                <li><a href="index.html#news">新着情報</a></li>
+                <li><a href="index.html#basicinfo">基本情報</a></li>
+                <li><a href="index.html#rooms">部屋</a></li>
+                <li><a href="index.html#photos">写真</a></li>
+                <li><a href="index.html#access">アクセス</a></li>
+            </ul>
+        </nav>
+        <button class="menu-toggle" aria-label="メニュー" id="mobile-toggle">
+            <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+        </button>
+    </header>
+
+    <main class="container">
+        <article id="articleContainer">
+            <p style="text-align: center;">読み込み中...</p>
+        </article>
+        <a href="index.html" class="back-link">← 一覧に戻る</a>
+    </main>
+
+    <nav class="mobile-nav" id="mobile-nav">
+        <ul>
+            <li><a href="index.html#concept">コンセプト</a></li>
+            <li><a href="index.html#news">新着情報</a></li>
+            <li><a href="index.html#basicinfo">基本情報</a></li>
+            <li><a href="index.html#rooms">部屋</a></li>
+            <li><a href="index.html#photos">写真</a></li>
+            <li><a href="index.html#access">アクセス</a></li>
+        </ul>
+    </nav>
+    <div class="overlay"></div>
+
+    <script>
+        const CONFIG = {
+            serviceId: "aizu-tsurugajo-inn",
+            apiKey: "N0DjcWDusrLYS2MsJBrmptKGPtt1G0dbkbwv",
+            endpoint: "news"
+        };
+
+        async function fetchDetail() {
+            const container = document.getElementById('articleContainer');
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+
+            if (!id) {
+                container.innerHTML = '<p>記事が見つかりませんでした。</p>';
+                return;
+            }
+
+            try {
+                const res = await fetch(`https://${CONFIG.serviceId}.microcms.io/api/v1/${CONFIG.endpoint}/${id}`, {
+                    headers: { "X-MICROCMS-API-KEY": CONFIG.apiKey }
+                });
+                const data = await res.json();
+
+                const date = new Date(data.publishedAt).toLocaleDateString('ja-JP', {
+                    year: 'numeric', month: '2-digit', day: '2-digit'
+                });
+
+                const image = data.eyecatch || data.thumbnail || null;
+                const content = data.content || data.body || '';
+
+                container.innerHTML = `
+                    <div class="article-date">${date}</div>
+                    <h1 class="article-title">${data.title}</h1>
+                    ${image ? `<img src="${image.url}" class="article-eyecatch" alt="">` : ''}
+                    <div class="article-content">${content}</div>
+                `;
+                document.title = `${data.title} | My journal Aizu`;
+            } catch (err) {
+                container.innerHTML = '<p>読み込みに失敗しました。</p>';
+            }
+        }
+
+        // ハンバーガーメニューの開閉処理
+        const btn = document.getElementById('mobile-toggle');
+        const nav = document.getElementById('mobile-nav');
+        const overlay = document.querySelector('.overlay');
+
+        btn.onclick = () => {
+            btn.classList.toggle('open');
+            nav.classList.toggle('open');
+            overlay.classList.toggle('open');
+        };
+        overlay.onclick = () => {
+            btn.classList.remove('open');
+            nav.classList.remove('open');
+            overlay.classList.remove('open');
+        };
+
+        fetchDetail();
+    </script>
+</body>
+
+</html>

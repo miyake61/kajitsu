@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faveur Hayama 公式ホームページ</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* PCで3カラム、スマホは2つ並べる */
+        .rooms-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+        }
+
+        .room-item img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            cursor: pointer;
+            border-radius: 8px;
+            background: #eee;
+            display: block;
+            transition: box-shadow 0.2s;
+        }
+
+        .room-item img:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        /* タブレット等：2カラム */
+        @media (max-width: 900px) {
+            .rooms-container {
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+        }
+
+        /* スマホ：2カラム（1カラムにはしない） */
+        @media (max-width: 600px) {
+            .rooms-container {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+
+            .room-item img {
+                height: 120px;
+            }
+        }
+
+        /* モーダル用スタイル */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            animation: fadein 0.2s;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-img-wrapper {
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .modal-img {
+            max-width: 90vw;
+            max-height: 80vh;
+            border-radius: 8px;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.27);
+            background: #fff;
+        }
+
+        .close-modal-btn {
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            border: none;
+            font-size: 2em;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes fadein {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* メールアドレス表示部分 */
+        .contact-email-wrapper {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .contact-email {
+            font-size: 1.2rem;
+            color: #333;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .contact-email:hover {
+            opacity: 0.7;
+        }
+
+        .contact-email-icon {
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        /* アクセス（地図）を横幅広げる */
+        #access .map-frame {
+            display: block;
+            margin: 28px auto 0 auto;
+            width: 90vw;
+            max-width: 1000px;
+            min-width: 280px;
+            height: 450px;
+            border-radius: 12px;
+            border: 0;
+        }
+
+        @media (max-width: 1100px) {
+            #access .map-frame {
+                max-width: 98vw;
+            }
+        }
+
+        @media (max-width: 600px) {
+            #access .map-frame {
+                width: 100vw;
+                height: 260px;
+                border-radius: 6px;
+                margin-top: 18px;
+            }
+        }
+
+        /* Google翻訳言語選択のスタイル */
+        .google-translate-wrapper {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 150;
+            background: rgba(252, 250, 245, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .google-translate-wrapper {
+                top: 60px;
+                right: 10px;
+                padding: 6px;
+            }
+        }
+
+        /* Google翻訳のデフォルトスタイルを上書き */
+        #google_translate_element {
+            font-size: 14px;
+        }
+
+        .goog-te-banner-frame {
+            display: none !important;
+        }
+
+        .goog-te-balloon-frame {
+            display: none !important;
+        }
+
+        .goog-te-menu-value {
+            color: #333 !important;
+        }
+
+        .goog-te-menu2 {
+            max-width: 100% !important;
+        }
+
+        .goog-te-menu2-item {
+            font-size: 14px !important;
+            padding: 8px !important;
+        }
+    </style>
+    <!-- Google翻訳スクリプト -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'ja',
+                includedLanguages: 'ja,en,zh-CN,ko,fr,es,de,it,pt,ru',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</head>
+
+<body>
+
+    <header>
+        <a href="#" class="logo">Faveur Hayama</a>
+        <nav class="desktop-nav">
+            <ul>
+                <li><a href="#concept">コンセプト</a></li>
+                <li><a href="#news">新着情報</a></li>
+                <li><a href="#basicinfo">基本情報</a></li>
+                <li><a href="#rooms">部屋</a></li>
+                <li><a href="#photos">フォトギャラリー</a></li>
+                <li><a href="#access">アクセス</a></li>
+            </ul>
+        </nav>
+        <button class="menu-toggle" aria-label="メニューを開く" aria-controls="mobile-nav" aria-expanded="false">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+        <nav class="mobile-nav" id="mobile-nav" aria-hidden="true">
+            <ul>
+                <li><a href="#concept" onclick="closeMenu()">コンセプト</a></li>
+                <li><a href="#news" onclick="closeMenu()">新着情報</a></li>
+                <li><a href="#basicinfo" onclick="closeMenu()">基本情報</a></li>
+                <li><a href="#rooms" onclick="closeMenu()">部屋</a></li>
+                <li><a href="#photos" onclick="closeMenu()">フォトギャラリー</a></li>
+                <li><a href="#access" onclick="closeMenu()">アクセス</a></li>
+            </ul>
+        </nav>
+        <div class="google-translate-wrapper">
+            <div id="google_translate_element"></div>
+        </div>
+        <div class="overlay"></div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <img src="images/0052.JPG" alt="Hero Image" class="hero-img">
+            <h1 class="hero-title">富士と夕陽を望む邸宅</h1>
+        </section>
+
+        <section id="concept" class="section">
+            <h2 class="section-title">コンセプト</h2>
+            <div class="concept-text">
+                <p>静かな時間が流れる空間で、<br>その季節にしか出会えない旬の味を。<br>私たちは、訪れる皆様の心がゆっくりと<br>ほどけていくような場所を目指しています。</p>
+            </div>
+        </section>
+
+        <section id="news" class="section">
+            <h2 class="section-title">新着情報</h2>
+            <ul class="news-list" id="news-list"><li class="news-item">
+                <div class="news-date">2026/02/02</div>
+                <div class="news-content"><a href="news-detail.html?id=d3gvmzowcr" class="news-link">webhook連携開始！</a></div>
+            </li><li class="news-item">
+                <div class="news-date">2026/01/26</div>
+                <div class="news-content"><a href="news-detail.html?id=n7sife2r3abx" class="news-link">テスト3</a></div>
+            </li><li class="news-item">
+                <div class="news-date">2026/01/25</div>
+                <div class="news-content"><a href="news-detail.html?id=1ox_f5a5gkbd" class="news-link">テスト2</a></div>
+            </li><li class="news-item">
+                <div class="news-date">2026/01/25</div>
+                <div class="news-content"><a href="news-detail.html?id=rssfm48uk" class="news-link">テスト</a></div>
+            </li></ul>
+
+        </section>
+
+        <section id="basicinfo" class="section">
+            <h2 class="section-title">基本情報</h2>
+            <table class="basicinfo-table">
+                <tr>
+                    <th>施設名</th>
+                    <td>Faveur Hayama</td>
+                </tr>
+                <tr>
+                    <th>住所</th>
+                    <td>〒000-0000 〇〇県〇〇市〇〇町1-2-3</td>
+                </tr>
+                <tr>
+                    <th>電話番号</th>
+                    <td>00-0000-0000</td>
+                </tr>
+                <tr>
+                    <th>チェックイン</th>
+                    <td>15:00〜20:00</td>
+                </tr>
+                <tr>
+                    <th>チェックアウト</th>
+                    <td>〜11:00</td>
+                </tr>
+                <tr>
+                    <th>客室数</th>
+                    <td>10室 (和モダンツイン ほか)</td>
+                </tr>
+                <tr>
+                    <th>駐車場</th>
+                    <td>10台 (無料・予約不要)</td>
+                </tr>
+            </table>
+        </section>
+
+        <section id="rooms" class="section">
+            <h2 class="section-title">Room A</h2>
+            <div class="photo-gallery" id="rooms-container"></div>
+        </section>
+
+        <section id="photos" class="section">
+            <h2 class="section-title">Room B</h2>
+            <div class="photo-gallery" id="photo-gallery-container">
+                <div class="photo-item is-visible">
+                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/22ee213adcdb450ab760ae8ba08fe2fc/triple_1.jpg" alt="302" onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/22ee213adcdb450ab760ae8ba08fe2fc/triple_1.jpg', '302')">
+                    <div class="photo-caption">302</div>
+                </div>
+            
+                <div class="photo-item is-visible">
+                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/98ecbb32c2ef4c0897787a2afcf8ed76/twin_2.jpg" alt="301" onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/98ecbb32c2ef4c0897787a2afcf8ed76/twin_2.jpg', '301')">
+                    <div class="photo-caption">301</div>
+                </div>
+            
+                <div class="photo-item is-visible">
+                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/158ddc2249704503af73321f1f1d7cf4/fourroom_1.jpg" alt="306" onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/158ddc2249704503af73321f1f1d7cf4/fourroom_1.jpg', '306')">
+                    <div class="photo-caption">306</div>
+                </div>
+            
+                <div class="photo-item ">
+                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/66e8f808bf63461b8584a162fb487575/main_1.jpg" alt="205" onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/66e8f808bf63461b8584a162fb487575/main_1.jpg', '205')">
+                    <div class="photo-caption">205</div>
+                </div>
+            </div>
+
+            <div id="gallery-more-btn-wrapper" style="text-align: center; margin-top: 24px; display: none;">
+                <button id="gallery-more-btn" class="more-btn">もっと見る</button>
+            </div>
+        </section>
+
+        <section id="access" class="section">
+            <h2 class="section-title">アクセス</h2>
+            <div class="access-info">
+                〒000-0000 〇〇県〇〇市〇〇町1-2-3<br>TEL: 00-0000-0000<br><br>JR〇〇駅より徒歩10分。
+            </div>
+            <!-- 地図を横幅広めで最新の場所に変更 -->
+            <iframe class="map-frame"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3863.4749041017376!2d139.56998579999998!3d35.2805333!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60184757b398622b%3A0xa8cea423508cc858!2z44OV44Kh44OW44O844Or6JGJ5bGx5Yil6YK4!5e1!3m2!1sja!2sjp!4v1771263479864!5m2!1sja!2sjp"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="Google Map"></iframe>
+        </section>
+
+        <!-- お問い合わせセクション: メールアドレス表示 -->
+        <section id="contact" class="section">
+            <h2 class="section-title">お問い合わせ</h2>
+            <div class="contact-email-wrapper">
+                <p style="margin-bottom: 20px;">お問い合わせは、以下のメールアドレスまでご連絡ください。</p>
+                <a href="mailto:faveur.hayama@gmail.com" class="contact-email">
+                    <span class="contact-email-icon">✉</span>
+                    faveur.hayama@gmail.com
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- モーダル表示用要素 -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-img-wrapper">
+            <button class="close-modal-btn" id="close-modal-btn" aria-label="閉じる">&times;</button>
+            <img class="modal-img" id="modal-img" src="" alt="">
+            <div class="modal-caption" id="modal-caption" style="color:white;margin-top:10px;"></div>
+        </div>
+    </div>
+
+    <footer>
+        <span class="footer-logo">Faveur Hayama</span>
+        <div class="copyright">© 2026 Faveur Hayama All Rights Reserved.</div>
+    </footer>
+
+    <script>
+        /* --- メニュー制御 --- */
+        const menuToggle = document.querySelector('.menu-toggle');
+        const mobileNav = document.getElementById('mobile-nav');
+        const overlay = document.querySelector('.overlay');
+
+        function openMenu() {
+            menuToggle.classList.add('open');
+            mobileNav.classList.add('open');
+            overlay.classList.add('open');
+            mobileNav.setAttribute('aria-hidden', 'false');
+            menuToggle.setAttribute('aria-expanded', 'true');
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeMenu() {
+            menuToggle.classList.remove('open');
+            mobileNav.classList.remove('open');
+            overlay.classList.remove('open');
+            mobileNav.setAttribute('aria-hidden', 'true');
+            menuToggle.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = "";
+        }
+
+        menuToggle.addEventListener('click', () => {
+            mobileNav.classList.contains('open') ? closeMenu() : openMenu();
+        });
+        overlay.addEventListener('click', closeMenu);
+
+        /* --- モーダル拡大表示機能 --- */
+        function openModal(imageUrl, captionText) {
+            const modalOverlay = document.getElementById('modal-overlay');
+            const modalImg = document.getElementById('modal-img');
+            const modalCaption = document.getElementById('modal-caption');
+            modalImg.src = imageUrl;
+            modalImg.alt = captionText || '';
+            modalCaption.textContent = captionText || '';
+            modalOverlay.classList.add('open');
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeModal() {
+            const modalOverlay = document.getElementById('modal-overlay');
+            const modalImg = document.getElementById('modal-img');
+            modalImg.src = '';
+            modalImg.alt = '';
+            document.getElementById('modal-caption').textContent = '';
+            modalOverlay.classList.remove('open');
+            document.body.style.overflow = "";
+        }
+
+        document.getElementById('close-modal-btn').addEventListener('click', closeModal);
+        document.getElementById('modal-overlay').addEventListener('click', function (e) {
+            if (e.target === this) closeModal();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === "Escape") closeModal();
+        });
+
+        /* --- フォトギャラリー「もっと見る」ボタンの制御 --- */
+        // ※SSGで既にHTMLが作られている前提の動きです
+        document.addEventListener('DOMContentLoaded', () => {
+            const moreBtn = document.getElementById('gallery-more-btn');
+            const moreBtnWrapper = document.getElementById('gallery-more-btn-wrapper');
+            const container = document.getElementById('photo-gallery-container');
+
+            if (moreBtn) {
+                moreBtn.addEventListener('click', () => {
+                    const hiddenItems = container.querySelectorAll('.photo-item');
+                    hiddenItems.forEach(item => item.classList.add('is-visible'));
+                    moreBtnWrapper.style.display = "none";
+                });
+            }
+        });
+    </script>
+
+</body>
+
+</html>
