@@ -17,8 +17,8 @@ async function build() {
         // 1. microCMSから news, rooms, photo データを取得
         console.log("データを取得しています...");
         const newsData = await (await fetch(`https://${SERVICE_ID}.microcms.io/api/v1/news`, { headers })).json();
-        const roomsData = await (await fetch(`https://${SERVICE_ID}.microcms.io/api/v1/rooms`, { headers })).json();
-        const photoData = await (await fetch(`https://${SERVICE_ID}.microcms.io/api/v1/photo`, { headers })).json();
+        const roomsData = await (await fetch(`https://${SERVICE_ID}.microcms.io/api/v1/room_a`, { headers })).json();
+        const photoData = await (await fetch(`https://${SERVICE_ID}.microcms.io/api/v1/room_b`, { headers })).json();
 
         // 2. 取得したデータを HTML の一部として変換
         // 新着情報
