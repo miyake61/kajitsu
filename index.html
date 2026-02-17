@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Faveur Hayama 公式ホームページ</title>
+    <title>ファブール葉山別邸 公式ホームページ</title>
     <meta name="robots" content="noindex, nofollow">
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -224,14 +224,14 @@
 <body>
 
     <header>
-        <a href="#" class="logo">Faveur Hayama</a>
+        <a href="#" class="logo">ファブール葉山別邸</a>
         <nav class="desktop-nav">
             <ul>
                 <li><a href="#concept">コンセプト</a></li>
                 <li><a href="#news">新着情報</a></li>
                 <li><a href="#basicinfo">基本情報</a></li>
-                <li><a href="#rooms">部屋</a></li>
-                <li><a href="#photos">フォトギャラリー</a></li>
+                <li><a href="#rooms">Room A</a></li>
+                <li><a href="#photos">Room B</a></li>
                 <li><a href="#access">アクセス</a></li>
             </ul>
         </nav>
@@ -245,8 +245,8 @@
                 <li><a href="#concept" onclick="closeMenu()">コンセプト</a></li>
                 <li><a href="#news" onclick="closeMenu()">新着情報</a></li>
                 <li><a href="#basicinfo" onclick="closeMenu()">基本情報</a></li>
-                <li><a href="#rooms" onclick="closeMenu()">部屋</a></li>
-                <li><a href="#photos" onclick="closeMenu()">フォトギャラリー</a></li>
+                <li><a href="#rooms" onclick="closeMenu()">Room A</a></li>
+                <li><a href="#photos" onclick="closeMenu()">Room B</a></li>
                 <li><a href="#access" onclick="closeMenu()">アクセス</a></li>
             </ul>
         </nav>
@@ -265,7 +265,7 @@
         <section id="concept" class="section">
             <h2 class="section-title">コンセプト</h2>
             <div class="concept-text">
-                <p>静かな時間が流れる空間で、<br>その季節にしか出会えない旬の味を。<br>私たちは、訪れる皆様の心がゆっくりと<br>ほどけていくような場所を目指しています。</p>
+                <p>海岸まで徒歩15秒<br>富士山と夕陽を望む海辺のお家<br>私たちは、訪れる皆様の心がゆっくりと<br>ほどけていくような場所を目指しています。</p>
             </div>
         </section>
 
@@ -280,11 +280,11 @@
             <table class="basicinfo-table">
                 <tr>
                     <th>施設名</th>
-                    <td>Faveur Hayama</td>
+                    <td>ファブール葉山別邸</td>
                 </tr>
                 <tr>
                     <th>住所</th>
-                    <td>〒000-0000 〇〇県〇〇市〇〇町1-2-3</td>
+                    <td>〒240-0112 神奈川県三浦郡葉山町堀内216-23</td>
                 </tr>
                 <tr>
                     <th>電話番号</th>
@@ -292,26 +292,59 @@
                 </tr>
                 <tr>
                     <th>チェックイン</th>
-                    <td>15:00〜20:00</td>
+                    <td>16:00〜20:00</td>
                 </tr>
                 <tr>
                     <th>チェックアウト</th>
-                    <td>〜11:00</td>
+                    <td>〜10:00</td>
                 </tr>
                 <tr>
                     <th>客室数</th>
-                    <td>10室 (和モダンツイン ほか)</td>
+                    <td>2室 (Room A, Room B)</td>
                 </tr>
                 <tr>
                     <th>駐車場</th>
-                    <td>10台 (無料・予約不要)</td>
+                    <td>部屋ごとに1台 (無料・予約不要)</td>
+                </tr>
+                <tr>
+                    <th>最大定員</th>
+                    <td>各室5名様</td>
+                </tr>
+                <tr>
+                    <th>間取り</th>
+                    <td>Room A（3階）: 1LDK＋バルコニー<br>Room B（2階）: 1LDK</td>
+                </tr>
+                <tr>
+                    <th>キッチン</th>
+                    <td>IHコンロ、冷蔵庫、電子レンジ、調理器具・食器一式完備</td>
+                </tr>
+                <tr>
+                    <th>アメニティ</th>
+                    <td>シャンプー、リンス、ボディソープ、タオル、歯ブラシ、ドライヤー</td>
+                </tr>
+                <tr>
+                    <th>通信環境</th>
+                    <td>全館無料Wi-Fi完備</td>
+                </tr>
+                <tr>
+                    <th>喫煙</th>
+                    <td>全館禁煙（屋外に指定喫煙スペースあり）</td>
+                </tr>
+                <tr>
+                    <th>ペット</th>
+                    <td>不可</td>
+                </tr>
+
+                <tr>
+                    <th>お支払い方法</th>
+                    <td>予約時事前決済のみ</td>
                 </tr>
             </table>
         </section>
 
         <section id="rooms" class="section">
             <h2 class="section-title">Room A</h2>
-            <div class="photo-gallery" id="rooms-container"></div>
+            <div class="photo-gallery" id="rooms-container"><!-- ROOMS_LIST --></div>
         </section>
 
         <section id="photos" class="section">
@@ -323,10 +356,21 @@
             </div>
         </section>
 
+        <!-- ここに360度カメラセクションを挿入 -->
+        <section id="theta360" class="section theta-section">
+            <h2 class="section-title" style="text-align:center;">室内360度カメラ</h2>
+            <div class="theta-links">
+                <a href="https://r02824496.theta360.biz/t/3ba8f19c-0004-11f1-b7fe-06e15c8163f7-1" target="_blank"
+                    rel="noopener">Room A</a>
+                <a href="https://r02824496.theta360.biz/t/ccd7898a-0586-11f1-ba53-0a7fdda087bb-1" target="_blank"
+                    rel="noopener">Room B</a>
+            </div>
+        </section>
+
         <section id="access" class="section">
             <h2 class="section-title">アクセス</h2>
             <div class="access-info">
-                〒000-0000 〇〇県〇〇市〇〇町1-2-3<br>TEL: 00-0000-0000<br><br>JR〇〇駅より徒歩10分。
+                〒240-0112 神奈川県三浦郡葉山町堀内216-23<br>TEL: 00-0000-0000<br><br>JR逗子駅より車で11分。
             </div>
             <!-- 地図を横幅広めで最新の場所に変更 -->
             <iframe class="map-frame"
@@ -358,8 +402,8 @@
     </div>
 
     <footer>
-        <span class="footer-logo">Faveur Hayama</span>
-        <div class="copyright">© 2026 Faveur Hayama All Rights Reserved.</div>
+        <span class="footer-logo">ファブール葉山別邸</span>
+        <div class="copyright">© 2026 ファブール葉山別邸 All Rights Reserved.</div>
     </footer>
 
     <script>

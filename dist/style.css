@@ -477,3 +477,46 @@ footer {
     /* もし一行ずつを中央寄せにしたいなら、以下を追加 */
     /* text-align: center; */
 }
+
+/* --- 室内360度カメラ (360 Camera) --- */
+.theta-section {
+    text-align: center;
+    margin: 40px auto;
+}
+
+.theta-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* ボタンを中央に寄せる */
+    gap: 32px;
+    margin-top: 16px;
+}
+
+.theta-links a {
+    display: inline-block;
+    font-size: 1.1em;
+    padding: 14px 34px;
+    background: #f3f3ed;
+    color: #29529e;
+    border-radius: 6px;
+    border: 1px solid #e8e8e0;
+    text-decoration: none;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.theta-links a:hover {
+    background: #29529e;
+    color: #fff;
+}
+
+/* スマホ対応：ボタンの隙間を少し調整 */
+@media (max-width: 600px) {
+    .theta-links {
+        gap: 16px;
+    }
+    .theta-links a {
+        padding: 12px 24px;
+        font-size: 1rem;
+    }
+}
