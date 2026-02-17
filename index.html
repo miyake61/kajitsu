@@ -344,7 +344,11 @@
 
         <section id="rooms" class="section">
             <h2 class="section-title">Room A</h2>
-            <div class="photo-gallery" id="rooms-container"><!-- ROOMS_LIST --></div>
+            <div class="photo-gallery" id="rooms-container"><!-- ROOMS_LIST -->
+            </div>
+            <div id="rooms-more-btn-wrapper" style="text-align: center; margin-top: 24px; display: none;">
+                <button id="rooms-more-btn" class="more-btn">もっと見る</button>
+            </div>
         </section>
 
         <section id="photos" class="section">
@@ -370,7 +374,8 @@
         <section id="access" class="section">
             <h2 class="section-title">アクセス</h2>
             <div class="access-info">
-                〒240-0112 神奈川県三浦郡葉山町堀内216-23<br>TEL: 00-0000-0000<br>JR逗子駅より車で11分。<br>富士山を望む海までは徒歩15秒<br>葉山マリーナ：徒歩5分。森戸海岸：徒歩10分。<br>コンビニエンスストア：徒歩5分。コインパーキング：徒歩1分。
+                〒240-0112 神奈川県三浦郡葉山町堀内216-23<br>TEL:
+                00-0000-0000<br>JR逗子駅より車で11分。<br>富士山を望む海までは徒歩15秒<br>葉山マリーナ：徒歩5分。森戸海岸：徒歩10分。<br>コンビニエンスストア：徒歩5分。コインパーキング：徒歩1分。
             </div>
             <!-- 地図を横幅広めで最新の場所に変更 -->
             <iframe class="map-frame"
@@ -462,24 +467,29 @@
             if (e.target === this) closeModal();
         });
 
-        document.addEventListener('keydown', function (e) {
-            if (e.key === "Escape") closeModal();
-        });
-
-        /* --- フォトギャラリー「もっと見る」ボタンの制御 --- */
-        // ※SSGで既にHTMLが作られている前提の動きです
         document.addEventListener('DOMContentLoaded', () => {
-            const moreBtn = document.getElementById('gallery-more-btn');
-            const moreBtnWrapper = document.getElementById('gallery-more-btn-wrapper');
-            const container = document.getElementById('photo-gallery-container');
+            function setupMoreButton(containerId, wrapperId, btnId) {
+                const container = document.getElementById(containerId);
+                const wrapper = document.getElementById(wrapperId);
+                const btn = document.getElementById(btnId);
 
-            if (moreBtn) {
-                moreBtn.addEventListener('click', () => {
-                    const hiddenItems = container.querySelectorAll('.photo-item');
-                    hiddenItems.forEach(item => item.classList.add('is-visible'));
-                    moreBtnWrapper.style.display = "none";
+                if (!container || !wrapper || !btn) return;
+
+                // 10枚目以降（シールなし）がある場合のみボタンを表示
+                const items = container.querySelectorAll('.photo-item');
+                if (items.length > 9) {
+                    wrapper.style.display = "block";
+                }
+
+                btn.addEventListener('click', () => {
+                    items.forEach(item => item.classList.add('is-visible'));
+                    wrapper.style.display = "none";
                 });
             }
+
+            // Room A と Room B それぞれに実行
+            setupMoreButton('rooms-container', 'rooms-more-btn-wrapper', 'rooms-more-btn');
+            setupMoreButton('photo-gallery-container', 'gallery-more-btn-wrapper', 'gallery-more-btn');
         });
     </script>
 

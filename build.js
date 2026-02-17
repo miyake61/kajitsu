@@ -16,9 +16,10 @@ async function build() {
     try {
         // 1. microCMSから news, rooms, photo データを取得
         console.log("データを取得しています...");
-        const newsData = await (await fetch(`https://${SERVICE_ID}.microcms.io/api/v1/news`, { headers })).json();
-        const roomsData = await (await fetch(`https://${SERVICE_ID}.microcms.io/api/v1/room_a`, { headers })).json();
-        const photoData = await (await fetch(`https://${SERVICE_ID}.microcms.io/api/v1/room_b`, { headers })).json();
+        // limit=100 を追加
+        const newsData = await (await fetch(`https://${SERVICE_ID}.microcms.io/api/v1/news?limit=100`, { headers })).json();
+        const roomsData = await (await fetch(`https://${SERVICE_ID}.microcms.io/api/v1/room_a?limit=100`, { headers })).json();
+        const photoData = await (await fetch(`https://${SERVICE_ID}.microcms.io/api/v1/room_b?limit=100`, { headers })).json();
 
         // 2. 取得したデータを HTML の一部として変換
         // 新着情報
@@ -38,7 +39,7 @@ async function build() {
             const text = room.caption || room.title || "";
 
             return `
-        <div class="photo-item ${index < 3 ? 'is-visible' : ''}">
+        <div class="photo-item ${index < 9 ? 'is-visible' : ''}">
             <img src="${room.image.url}" alt="${text}" onclick="openModal('${room.image.url}', '${text}')">
             ${text ? `<div class="photo-caption">${text}</div>` : ""}
         </div>
@@ -49,7 +50,7 @@ async function build() {
         const photoHtml = photoData.contents.map((photo, index) => {
             const text = photo.caption || "";
             return `
-                <div class="photo-item ${index < 3 ? 'is-visible' : ''}">
+                <div class="photo-item ${index < 9 ? 'is-visible' : ''}">
                     <img src="${photo.image.url}" alt="${text}" onclick="openModal('${photo.image.url}', '${text}')">
                     ${text ? `<div class="photo-caption">${text}</div>` : ""}
                 </div>
