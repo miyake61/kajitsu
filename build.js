@@ -12,7 +12,7 @@ const API_KEY = "N0DjcWDusrLYS2MsJBrmptKGPtt1G0dbkbwv";
 async function build() {
     console.log("調理開始（ビルド中）...");
     const headers = { "X-MICROCMS-API-KEY": API_KEY };
-    
+
     try {
         // 1. microCMSから news, rooms, photo データを取得
         console.log("データを取得しています...");
@@ -30,14 +30,18 @@ async function build() {
             </li>`;
         }).join('');
 
-        // お部屋情報
-        const roomsHtml = roomsData.contents.map(room => `
-            <div class="room-item">
-                <img src="${room.image.url}" alt="${room.title}" onclick="openModal('${room.image.url}', '${room.title}')">
-                <h3>${room.title}</h3>
-                <p>${room.description.replace(/\n/g, '<br>')}</p>
-            </div>
-        `).join('');
+        // お部屋情報の構成をフォトギャラリーに合わせる
+        const roomsHtml = roomsData.contents.map((room, index) => {
+            // 【重要】新しいフィールドIDが「title」でない場合は、ここを修正してください
+            const text = room.caption || "";
+
+            return `
+        <div class="room-item ${index < 3 ? 'is-visible' : ''}">
+            <img src="${room.image.url}" alt="${text}" onclick="openModal('${room.image.url}', '${text}')">
+            ${text ? `<div class="room-caption">${text}</div>` : ""}
+        </div>
+    `;
+        }).join('');
 
         // フォトギャラリー
         const photoHtml = photoData.contents.map((photo, index) => {
@@ -59,23 +63,23 @@ async function build() {
         console.log("HTMLを組み立てています...");
         let html = fs.readFileSync('index.html', 'utf8');
         // 3つの空文字に順に、newsHtml, roomsHtml, photoHtml を入れることで挿入している
-                html = html.replace('<!-- NEWS_LIST -->', newsHtml);
-                html = html.replace('<!-- ROOMS_LIST -->', roomsHtml);
-                html = html.replace('<!-- PHOTO_LIST -->', photoHtml);
+        html = html.replace('<!-- NEWS_LIST -->', newsHtml);
+        html = html.replace('<!-- ROOMS_LIST -->', roomsHtml);
+        html = html.replace('<!-- PHOTO_LIST -->', photoHtml);
 
         // 4. 完成品を dist フォルダに出力
         if (!fs.existsSync('dist')) fs.mkdirSync('dist');
         fs.writeFileSync('dist/index.html', html);
-        
+
         // 必要な静的ファイルも dist にコピー
         if (fs.existsSync('style.css')) fs.copyFileSync('style.css', 'dist/style.css');
         if (fs.existsSync('news-detail.html')) fs.copyFileSync('news-detail.html', 'dist/news-detail.html');
-        
+
         // imagesフォルダをコピー
         if (fs.existsSync('images')) {
             const distImagesPath = 'dist/images';
             if (!fs.existsSync(distImagesPath)) fs.mkdirSync(distImagesPath, { recursive: true });
-            
+
             const imageFiles = fs.readdirSync('images');
             imageFiles.forEach(file => {
                 const srcPath = path.join('images', file);
