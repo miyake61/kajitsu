@@ -205,6 +205,82 @@
             font-size: 14px !important;
             padding: 8px !important;
         }
+
+        /* --- 宿泊予約ボタン：黒背景 --- */
+        .reserve-btn {
+            display: inline-block;
+            margin-left: 18px;
+            padding: 0.5em 1.4em;
+            background: #111;
+            color: #fff !important;
+            font-weight: 700;
+            border: none;
+            border-radius: 23px;
+            font-size: 1.03em;
+            letter-spacing: .06em;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.09);
+            transition: background 0.15s, box-shadow 0.15s, opacity 0.2s;
+            cursor: pointer;
+            vertical-align: middle;
+            line-height: 1.2;
+        }
+        .reserve-btn:hover, .reserve-btn:focus {
+            background: #333;
+            color: #fff !important;
+            opacity: 0.92;
+            text-decoration: none;
+        }
+
+        @media (max-width: 1024px) {
+            .reserve-btn {
+                margin-left: 10px;
+                padding: 0.38em 1em;
+                font-size: 1em;
+            }
+        }
+
+        /* スマホ時のヘッダー用ホルダー配置 */
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+        @media (min-width: 701px) {
+            .header-actions {
+                display: none; /* PCでは不要 */
+            }
+        }
+        @media (max-width: 700px) {
+            .header-actions {
+                display: flex;
+                align-items: flex-start;
+                position: absolute;
+                right: 14px;
+                /* "もうちょい上"に */
+                top: 6px;
+                z-index: 600;
+            }
+            header {
+                position: relative;
+            }
+            .desktop-nav {
+                display: none !important;
+            }
+        }
+        /* ボタンのバランス調整: スマホ */
+        @media (max-width:700px) {
+            .header-actions .reserve-btn {
+                margin-left: 0;
+                margin-right: 12px;
+                padding: 0.42em 1.12em;
+                font-size: 1em;
+            }
+        }
+        @media (min-width: 701px) {
+            .desktop-nav .reserve-btn {
+                display: inline-block;
+            }
+        }
     </style>
     <!-- Google翻訳スクリプト -->
     <script type="text/javascript">
@@ -233,9 +309,32 @@
                 <li><a href="#rooms">Room A</a></li>
                 <li><a href="#photos">Room B</a></li>
                 <li><a href="#access">アクセス</a></li>
+                <li>
+                    <a
+                        class="reserve-btn"
+                        href="https://www.booking.com/hotel/jp/huaburuxie-shan-bie-di.ja.html"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >宿泊予約</a>
+                </li>
             </ul>
         </nav>
-        <button class="menu-toggle" aria-label="メニューを開く" aria-controls="mobile-nav" aria-expanded="false">
+        <!-- スマホ用：ハンバーガーの左に宿泊予約ボタン -->
+        <div class="header-actions">
+            <a
+                class="reserve-btn"
+                href="https://www.booking.com/hotel/jp/huaburuxie-shan-bie-di.ja.html"
+                target="_blank"
+                rel="noopener noreferrer"
+            >宿泊予約</a>
+            <button class="menu-toggle" aria-label="メニューを開く" aria-controls="mobile-nav" aria-expanded="false">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+        <!-- /スマホ用 -->
+        <button class="menu-toggle" aria-label="メニューを開く" aria-controls="mobile-nav" aria-expanded="false" style="display:none;">
             <span class="bar"></span>
             <span class="bar"></span>
             <span class="bar"></span>
@@ -412,32 +511,33 @@
     </footer>
 
     <script>
-        /* --- メニュー制御 --- */
-        const menuToggle = document.querySelector('.menu-toggle');
+        // --- メニュー制御 ---
+        // メニューtoggleは .menu-toggle 2つあるので両方対応
+        const menuToggles = Array.from(document.querySelectorAll('.menu-toggle'));
         const mobileNav = document.getElementById('mobile-nav');
         const overlay = document.querySelector('.overlay');
 
         function openMenu() {
-            menuToggle.classList.add('open');
+            menuToggles.forEach(btn => btn.classList.add('open'));
             mobileNav.classList.add('open');
             overlay.classList.add('open');
             mobileNav.setAttribute('aria-hidden', 'false');
-            menuToggle.setAttribute('aria-expanded', 'true');
+            menuToggles.forEach(btn => btn.setAttribute('aria-expanded', 'true'));
             document.body.style.overflow = "hidden";
         }
 
         function closeMenu() {
-            menuToggle.classList.remove('open');
+            menuToggles.forEach(btn => btn.classList.remove('open'));
             mobileNav.classList.remove('open');
             overlay.classList.remove('open');
             mobileNav.setAttribute('aria-hidden', 'true');
-            menuToggle.setAttribute('aria-expanded', 'false');
+            menuToggles.forEach(btn => btn.setAttribute('aria-expanded', 'false'));
             document.body.style.overflow = "";
         }
 
-        menuToggle.addEventListener('click', () => {
+        menuToggles.forEach(btn => btn.addEventListener('click', () => {
             mobileNav.classList.contains('open') ? closeMenu() : openMenu();
-        });
+        }));
         overlay.addEventListener('click', closeMenu);
 
         /* --- モーダル拡大表示機能 --- */
