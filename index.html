@@ -1,948 +1,410 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ファブール葉山別邸 公式サイト</title>
-    <meta name="robots" content="noindex, nofollow">
-    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <style>
-        /* PCで3カラム、スマホは2つ並べる */
-        .rooms-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 24px;
-        }
-
-        .room-item img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            cursor: pointer;
-            border-radius: 8px;
-            background: #eee;
-            display: block;
-            transition: box-shadow 0.2s;
-        }
-
-        .room-item img:hover {
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-        }
-
-        /* タブレット等：2カラム */
-        @media (max-width: 900px) {
-            .rooms-container {
-                grid-template-columns: 1fr 1fr;
-                gap: 16px;
-            }
-        }
-
-        /* スマホ：2カラム（1カラムにはしない） */
-        @media (max-width: 600px) {
-            .rooms-container {
-                grid-template-columns: 1fr 1fr;
-                gap: 12px;
-            }
-
-            .room-item img {
-                height: 120px;
-            }
-        }
-
-        /* モーダル用スタイル */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 2000;
-            background: rgba(0, 0, 0, 0.8);
-            justify-content: center;
-            align-items: center;
-            animation: fadein 0.2s;
-        }
-
-        .modal-overlay.open {
-            display: flex;
-        }
-
-        .modal-img-wrapper {
-            max-width: 90vw;
-            max-height: 90vh;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-        }
-
-        .modal-img {
-            max-width: 90vw;
-            max-height: 80vh;
-            border-radius: 8px;
-            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.27);
-            background: #fff;
-        }
-
-        .close-modal-btn {
-            background: rgba(0, 0, 0, 0.6);
-            color: #fff;
-            border: none;
-            font-size: 2em;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            margin-bottom: 5px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            z-index: 10;
-        }
-
-        @keyframes fadein {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        /* メールアドレス表示部分 */
-        .contact-email-wrapper {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .contact-email {
-            font-size: 1.2rem;
-            color: #333;
-            text-decoration: none;
-            transition: opacity 0.3s;
-        }
-
-        .contact-email:hover {
-            opacity: 0.7;
-        }
-
-        .contact-email-icon {
-            display: inline-block;
-            margin-right: 8px;
-        }
-
-        /* アクセス（地図）を横幅広げる */
-        #access .map-frame {
-            display: block;
-            margin: 28px auto 0 auto;
-            width: 90vw;
-            max-width: 1000px;
-            min-width: 280px;
-            height: 450px;
-            border-radius: 12px;
-            border: 0;
-        }
-
-        @media (max-width: 1100px) {
-            #access .map-frame {
-                max-width: 98vw;
-            }
-        }
-
-        @media (max-width: 600px) {
-            #access .map-frame {
-                width: 100vw;
-                height: 260px;
-                border-radius: 6px;
-                margin-top: 18px;
-            }
-        }
-
-        /* Google翻訳言語選択のスタイル */
-        .google-translate-wrapper {
-            position: fixed;
-            top: 80px;
-            right: 20px;
-            z-index: 150;
-            background: rgba(252, 250, 245, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 8px;
-            padding: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        @media (max-width: 768px) {
-            .google-translate-wrapper {
-                top: 60px;
-                right: 10px;
-                padding: 6px;
-            }
-        }
-
-        /* Google翻訳のデフォルトスタイルを上書き */
-        #google_translate_element {
-            font-size: 14px;
-        }
-
-        .goog-te-banner-frame {
-            display: none !important;
-        }
-
-        .goog-te-balloon-frame {
-            display: none !important;
-        }
-
-        .goog-te-menu-value {
-            color: #333 !important;
-        }
-
-        .goog-te-menu2 {
-            max-width: 100% !important;
-        }
-
-        .goog-te-menu2-item {
-            font-size: 14px !important;
-            padding: 8px !important;
-        }
-
-        /* --- 宿泊予約ボタン：黒背景 --- */
-        .reserve-btn {
-            display: inline-block;
-            margin-left: 18px;
-            padding: 0.5em 1.4em;
-            background: #111;
-            color: #fff !important;
-            font-weight: 700;
-            border: none;
-            border-radius: 23px;
-            font-size: 1.03em;
-            letter-spacing: .06em;
-            text-decoration: none;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
-            transition: background 0.15s, box-shadow 0.15s, opacity 0.2s;
-            cursor: pointer;
-            vertical-align: middle;
-            line-height: 1.2;
-        }
-
-        .reserve-btn:hover,
-        .reserve-btn:focus {
-            background: #333;
-            color: #fff !important;
-            opacity: 0.92;
-            text-decoration: none;
-        }
-
-        @media (max-width: 1024px) {
-            .reserve-btn {
-                margin-left: 10px;
-                padding: 0.38em 1em;
-                font-size: 1em;
-            }
-        }
-
-        /* スマホ時のヘッダー用ホルダー配置 */
-        .header-actions {
-            display: flex;
-            align-items: center;
-        }
-
-        @media (min-width: 701px) {
-            .header-actions {
-                display: none;
-                /* PCでは不要 */
-            }
-        }
-
-        @media (max-width: 700px) {
-            .header-actions {
-                display: flex;
-                align-items: flex-start;
-                position: absolute;
-                right: 14px;
-                /* "もうちょい上"に */
-                top: 6px;
-                z-index: 600;
-            }
-
-            .desktop-nav {
-                display: none !important;
-            }
-        }
-
-        /* ボタンのバランス調整: スマホ */
-        @media (max-width:700px) {
-            .header-actions .reserve-btn {
-                margin-left: 0;
-                margin-right: 12px;
-                padding: 0.42em 1.12em;
-                font-size: 1em;
-            }
-        }
-
-        @media (min-width: 701px) {
-            .desktop-nav .reserve-btn {
-                display: inline-block;
-            }
-        }
-    </style>
-    <!-- Google翻訳スクリプト -->
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'ja',
-                includedLanguages: 'ja,en,zh-CN,ko,fr,es,de,it,pt,ru',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                autoDisplay: false
-            }, 'google_translate_element');
-        }
-    </script>
-    <script type="text/javascript"
-        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ファブール葉山別邸 公式サイト</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.rooms-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+}
+.room-item img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    cursor: pointer;
+    border-radius: 8px;
+    background: #eee;
+    display: block;
+    transition: box-shadow 0.2s;
+}
+.room-item img:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+@media (max-width:900px) {
+    .rooms-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+}
+@media (max-width:600px) {
+    .rooms-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+    .room-item img {
+        height: 120px;
+    }
+}
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: rgba(0,0,0,0.8);
+    justify-content: center;
+    align-items: center;
+    animation: fadein 0.2s;
+}
+.modal-overlay.open { display: flex; }
+.modal-img-wrapper {
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+.modal-img {
+    max-width: 90vw;
+    max-height: 80vh;
+    border-radius: 8px;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.27);
+    background: #fff;
+}
+.close-modal-btn {
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    border: none;
+    font-size: 2em;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+}
+@keyframes fadein {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+.contact-email-wrapper {
+    text-align: center;
+    margin-top: 20px;
+}
+.contact-email {
+    font-size: 1.2rem;
+    color: #333;
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+.contact-email:hover { opacity: 0.7; }
+.contact-email-icon {
+    display: inline-block;
+    margin-right: 8px;
+}
+#access .map-frame {
+    display: block;
+    margin: 28px auto 0 auto;
+    width: 90vw;
+    max-width: 1000px;
+    min-width: 280px;
+    height: 450px;
+    border-radius: 12px;
+    border: 0;
+}
+@media (max-width: 1100px) {
+    #access .map-frame { max-width: 98vw; }
+}
+@media (max-width: 600px) {
+    #access .map-frame {
+        width: 100vw;
+        height: 260px;
+        border-radius: 6px;
+        margin-top: 18px;
+    }
+}
+.google-translate-wrapper {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 150;
+    background: rgba(252,250,245,0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    padding: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+@media (max-width:768px) {
+    .google-translate-wrapper {
+        top: 60px; right: 10px; padding: 6px;
+    }
+}
+#google_translate_element { font-size: 14px; }
+.goog-te-banner-frame,.goog-te-balloon-frame { display: none !important; }
+.goog-te-menu-value { color: #333 !important; }
+.goog-te-menu2 { max-width: 100% !important; }
+.goog-te-menu2-item { font-size: 14px !important; padding: 8px !important; }
+.reserve-btn {
+    display: inline-block;
+    margin-left: 18px;
+    padding: 0.5em 1.4em;
+    background: #111;
+    color: #fff !important;
+    font-weight: 700;
+    border: none;
+    border-radius: 23px;
+    font-size: 1.03em;
+    letter-spacing: .06em;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.09);
+    transition: background 0.15s, box-shadow 0.15s, opacity 0.2s;
+    cursor: pointer;
+    vertical-align: middle;
+    line-height: 1.2;
+}
+.reserve-btn:hover,.reserve-btn:focus {
+    background: #333;
+    color: #fff !important;
+    opacity: 0.92;
+    text-decoration: none;
+}
+@media (max-width:1024px) {
+    .reserve-btn { margin-left: 10px; padding: 0.38em 1em; font-size: 1em; }
+}
+.header-actions { display: flex; align-items: center; }
+@media (min-width:701px) {
+    .header-actions { display: none;}
+}
+@media (max-width:700px) {
+    .header-actions {
+        display: flex;
+        align-items: flex-start;
+        position: absolute;
+        right: 14px;
+        top: 6px;
+        z-index: 600;
+    }
+    .desktop-nav { display: none !important; }
+}
+@media (max-width:700px) {
+    .header-actions .reserve-btn {
+        margin-left: 0;
+        margin-right: 12px;
+        padding: 0.42em 1.12em;
+        font-size: 1em;
+    }
+}
+@media (min-width:701px) {
+    .desktop-nav .reserve-btn { display: inline-block; }
+}
+</style>
+<script type="text/javascript">
+function googleTranslateElementInit(){
+    new google.translate.TranslateElement({
+        pageLanguage:'ja',
+        includedLanguages:'ja,en,zh-CN,ko,fr,es,de,it,pt,ru',
+        layout:google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay:false
+    },'google_translate_element');
+}
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </head>
-
 <body>
-
-    <header>
-        <a href="#" class="logo">ファブール葉山別邸</a>
-        <nav class="desktop-nav">
-            <ul>
-                <li><a href="#concept">コンセプト</a></li>
-                <li><a href="#news">新着情報</a></li>
-                <li><a href="#basicinfo">基本情報</a></li>
-                <li><a href="#rooms">Room A</a></li>
-                <li><a href="#photos">Room B</a></li>
-                <li><a href="#access">アクセス</a></li>
-                <li>
-                    <a class="reserve-btn" href="https://www.booking.com/hotel/jp/huaburuxie-shan-bie-di.ja.html"
-                        target="_blank" rel="noopener noreferrer">宿泊予約</a>
-                </li>
-            </ul>
-        </nav>
-        <!-- スマホ用：ハンバーガーの左に宿泊予約ボタン -->
-        <div class="header-actions">
-            <a class="reserve-btn" href="https://www.booking.com/hotel/jp/huaburuxie-shan-bie-di.ja.html"
-                target="_blank" rel="noopener noreferrer">宿泊予約</a>
-            <button class="menu-toggle" aria-label="メニューを開く" aria-controls="mobile-nav" aria-expanded="false">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </button>
-        </div>
-        <!-- /スマホ用 -->
-        <button class="menu-toggle" aria-label="メニューを開く" aria-controls="mobile-nav" aria-expanded="false"
-            style="display:none;">
+<header>
+    <a href="#" class="logo">ファブール葉山別邸</a>
+    <nav class="desktop-nav">
+        <ul>
+            <li><a href="#concept">コンセプト</a></li>
+            <li><a href="#news">新着情報</a></li>
+            <li><a href="#basicinfo">基本情報</a></li>
+            <li><a href="#rooms">Room A</a></li>
+            <li><a href="#photos">Room B</a></li>
+            <li><a href="#access">アクセス</a></li>
+            <li>
+                <a class="reserve-btn" href="https://www.booking.com/hotel/jp/huaburuxie-shan-bie-di.ja.html" target="_blank" rel="noopener noreferrer">宿泊予約</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="header-actions">
+        <a class="reserve-btn" href="https://www.booking.com/hotel/jp/huaburuxie-shan-bie-di.ja.html" target="_blank" rel="noopener noreferrer">宿泊予約</a>
+        <button class="menu-toggle" aria-label="メニューを開く" aria-controls="mobile-nav" aria-expanded="false">
             <span class="bar"></span>
             <span class="bar"></span>
             <span class="bar"></span>
         </button>
-        <nav class="mobile-nav" id="mobile-nav" aria-hidden="true">
-            <ul>
-                <li><a href="#concept" onclick="closeMenu()">コンセプト</a></li>
-                <li><a href="#news" onclick="closeMenu()">新着情報</a></li>
-                <li><a href="#basicinfo" onclick="closeMenu()">基本情報</a></li>
-                <li><a href="#rooms" onclick="closeMenu()">Room A</a></li>
-                <li><a href="#photos" onclick="closeMenu()">Room B</a></li>
-                <li><a href="#access" onclick="closeMenu()">アクセス</a></li>
-            </ul>
-        </nav>
-        <div class="google-translate-wrapper">
-            <div id="google_translate_element"></div>
-        </div>
-        <div class="overlay"></div>
-    </header>
-
-    <main>
-        <section class="hero">
-            <img src="images/0052.JPG" alt="Hero Image" class="hero-img">
-            <h1 class="hero-title">富士と夕陽を望む邸宅</h1>
-        </section>
-
-        <section id="concept" class="section">
-            <h2 class="section-title">コンセプト</h2>
-            <div class="concept-text">
-                <p>海岸まで徒歩15秒<br>富士山と夕陽を望む海辺のお家<br>私たちは、訪れる皆様の心がゆっくりと<br>ほどけていくような場所を目指しています。</p>
-            </div>
-        </section>
-
-        <section id="news" class="section">
-            <h2 class="section-title">新着情報</h2>
-            <ul class="news-list" id="news-list">
-                <li class="news-item">
-                    <div class="news-date">2026/02/17</div>
-                    <div class="news-content"><a href="news-detail.html?id=d3gvmzowcr"
-                            class="news-link">公式サイトをオープンしました</a></div>
-                </li>
-                <li class="news-item">
-                    <div class="news-date">2026/01/26</div>
-                    <div class="news-content"><a href="news-detail.html?id=n7sife2r3abx" class="news-link">テスト3</a>
-                    </div>
-                </li>
-                <li class="news-item">
-                    <div class="news-date">2026/01/25</div>
-                    <div class="news-content"><a href="news-detail.html?id=1ox_f5a5gkbd" class="news-link">テスト2</a>
-                    </div>
-                </li>
-            </ul>
-
-        </section>
-
-        <section id="basicinfo" class="section">
-            <h2 class="section-title">基本情報</h2>
-            <table class="basicinfo-table">
-                <tr>
-                    <th>施設名</th>
-                    <td>ファブール葉山別邸</td>
-                </tr>
-                <tr>
-                    <th>住所</th>
-                    <td>〒240-0112 神奈川県三浦郡葉山町堀内216-23</td>
-                </tr>
-                <tr>
-                    <th>電話番号</th>
-                    <td>00-0000-0000</td>
-                </tr>
-                <tr>
-                    <th>チェックイン</th>
-                    <td>16:00〜20:00</td>
-                </tr>
-                <tr>
-                    <th>チェックアウト</th>
-                    <td>〜10:00</td>
-                </tr>
-                <tr>
-                    <th>客室数</th>
-                    <td>2室 (Room A, Room B)</td>
-                </tr>
-                <tr>
-                    <th>駐車場</th>
-                    <td>部屋ごとに1台 (無料・予約不要)</td>
-                </tr>
-                <tr>
-                    <th>最大定員</th>
-                    <td>各室5名様</td>
-                </tr>
-                <tr>
-                    <th>間取り</th>
-                    <td>Room A（3階）: 1LDK＋バルコニー<br>Room B（2階）: 1LDK</td>
-                </tr>
-                <tr>
-                    <th>キッチン</th>
-                    <td>IHコンロ、冷蔵庫、電子レンジ、調理器具・食器一式完備</td>
-                </tr>
-                <tr>
-                    <th>アメニティ</th>
-                    <td>シャンプー、リンス、ボディソープ、タオル、歯ブラシ、ドライヤー</td>
-                </tr>
-                <tr>
-                    <th>通信環境</th>
-                    <td>全館無料Wi-Fi完備</td>
-                </tr>
-                <tr>
-                    <th>喫煙</th>
-                    <td>全館禁煙（屋外に指定喫煙スペースあり）</td>
-                </tr>
-                <tr>
-                    <th>ペット</th>
-                    <td>不可</td>
-                </tr>
-
-                <tr>
-                    <th>お支払い方法</th>
-                    <td>予約時事前決済のみ</td>
-                </tr>
-            </table>
-        </section>
-
-        <section id="rooms" class="section">
-            <h2 class="section-title">Room A</h2>
-            <div class="photo-gallery" id="rooms-container">
-                <div class="photo-item is-visible">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/be03bfc0befa4596b396a581dd75906f/Room_A_2.png"
-                        alt="Room_A_間取り図"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/be03bfc0befa4596b396a581dd75906f/Room_A_2.png', 'Room_A_間取り図')">
-                    <div class="photo-caption">Room_A_間取り図</div>
-                </div>
-
-                <div class="photo-item is-visible">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/0cac78a89f304296ba4dd025c34eed35/Room_A_%E9%A2%A8%E6%99%AF2.jpg"
-                        alt="Room_A_風景"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/0cac78a89f304296ba4dd025c34eed35/Room_A_%E9%A2%A8%E6%99%AF2.jpg', 'Room_A_風景')">
-                    <div class="photo-caption">Room_A_風景</div>
-                </div>
-
-                <div class="photo-item is-visible">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/2c0d97c83d0946b29df2e074c00022cd/Room_A_%E9%A2%A8%E6%99%AF3.jpg"
-                        alt="Room_A_風景"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/2c0d97c83d0946b29df2e074c00022cd/Room_A_%E9%A2%A8%E6%99%AF3.jpg', 'Room_A_風景')">
-                    <div class="photo-caption">Room_A_風景</div>
-                </div>
-
-                <div class="photo-item is-visible">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/13ebc44d796044ed9a084c46eeb44032/Room_A_%E5%92%8C%E5%AE%A41.jpg"
-                        alt="Room_A_和室"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/13ebc44d796044ed9a084c46eeb44032/Room_A_%E5%92%8C%E5%AE%A41.jpg', 'Room_A_和室')">
-                    <div class="photo-caption">Room_A_和室</div>
-                </div>
-
-                <div class="photo-item is-visible">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/688140a4d342466c9957768e9064337c/Room_A_%E6%9C%9D%E9%A3%9F%E3%82%A4%E3%83%A1%E3%83%BC%E3%82%B82.jpg"
-                        alt="Room_A_朝食イメージ"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/688140a4d342466c9957768e9064337c/Room_A_%E6%9C%9D%E9%A3%9F%E3%82%A4%E3%83%A1%E3%83%BC%E3%82%B82.jpg', 'Room_A_朝食イメージ')">
-                    <div class="photo-caption">Room_A_朝食イメージ</div>
-                </div>
-
-                <div class="photo-item is-visible">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/f28c191bc4ca4047bfa702be990d6228/Room_A_%E8%84%B1%E8%A1%A3%E5%A0%B41.jpg"
-                        alt=" Room_A_脱衣場"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/f28c191bc4ca4047bfa702be990d6228/Room_A_%E8%84%B1%E8%A1%A3%E5%A0%B41.jpg', ' Room_A_脱衣場')">
-                    <div class="photo-caption"> Room_A_脱衣場</div>
-                </div>
-
-                <div class="photo-item is-visible">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/8bf4fd1c1a7148cd946baa8c3bce4a28/Room_A_%E7%8E%84%E9%96%A21.jpg"
-                        alt="Room_A_玄関"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/8bf4fd1c1a7148cd946baa8c3bce4a28/Room_A_%E7%8E%84%E9%96%A21.jpg', 'Room_A_玄関')">
-                    <div class="photo-caption">Room_A_玄関</div>
-                </div>
-
-                <div class="photo-item is-visible">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/1374745ee95f41f0975e703f73b0e61b/Room_A_%E3%83%AA%E3%83%93%E3%83%B3%E3%82%B07.jpg"
-                        alt="Room_A_リビング"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/1374745ee95f41f0975e703f73b0e61b/Room_A_%E3%83%AA%E3%83%93%E3%83%B3%E3%82%B07.jpg', 'Room_A_リビング')">
-                    <div class="photo-caption">Room_A_リビング</div>
-                </div>
-
-                <div class="photo-item is-visible">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/14d8ba1815414b88b9e0566e134090e0/Room_A_%E3%83%AA%E3%83%93%E3%83%B3%E3%82%B04.jpg"
-                        alt="Room_A_リビング"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/14d8ba1815414b88b9e0566e134090e0/Room_A_%E3%83%AA%E3%83%93%E3%83%B3%E3%82%B04.jpg', 'Room_A_リビング')">
-                    <div class="photo-caption">Room_A_リビング</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/a25e9f9cfa5b4223a156e311a19b7942/Room_A_%E3%83%AA%E3%83%93%E3%83%B3%E3%82%B02.jpg"
-                        alt="Room_A_リビング"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/a25e9f9cfa5b4223a156e311a19b7942/Room_A_%E3%83%AA%E3%83%93%E3%83%B3%E3%82%B02.jpg', 'Room_A_リビング')">
-                    <div class="photo-caption">Room_A_リビング</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/add9a7cf5b6a4c9a939d78ca891d14d4/Room_A_%E3%83%AA%E3%83%93%E3%83%B3%E3%82%B01.jpg"
-                        alt="Room_A_リビング"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/add9a7cf5b6a4c9a939d78ca891d14d4/Room_A_%E3%83%AA%E3%83%93%E3%83%B3%E3%82%B01.jpg', 'Room_A_リビング')">
-                    <div class="photo-caption">Room_A_リビング</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/79671133299b402a9e36a4c887388f29/Room_A_%E3%83%99%E3%83%83%E3%83%89%E3%83%AB%E3%83%BC%E3%83%A05.jpg"
-                        alt="Room_A_ベッドルーム"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/79671133299b402a9e36a4c887388f29/Room_A_%E3%83%99%E3%83%83%E3%83%89%E3%83%AB%E3%83%BC%E3%83%A05.jpg', 'Room_A_ベッドルーム')">
-                    <div class="photo-caption">Room_A_ベッドルーム</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/d87cb657a21a4961abc2c5352be06725/Room_A_%E3%83%99%E3%83%83%E3%83%89%E3%83%AB%E3%83%BC%E3%83%A03.jpg"
-                        alt="Room_B_ベッドルーム"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/d87cb657a21a4961abc2c5352be06725/Room_A_%E3%83%99%E3%83%83%E3%83%89%E3%83%AB%E3%83%BC%E3%83%A03.jpg', 'Room_B_ベッドルーム')">
-                    <div class="photo-caption">Room_B_ベッドルーム</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/3355a8662c974122bf8290c2c75f0c9a/Room_A_%E3%83%99%E3%83%83%E3%83%89%E3%83%AB%E3%83%BC%E3%83%A01.jpg"
-                        alt="Room_A_ベッドルーム"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/3355a8662c974122bf8290c2c75f0c9a/Room_A_%E3%83%99%E3%83%83%E3%83%89%E3%83%AB%E3%83%BC%E3%83%A01.jpg', 'Room_A_ベッドルーム')">
-                    <div class="photo-caption">Room_A_ベッドルーム</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/12bd6048690247a7bc3f52cde1fa550d/Room_A_%E3%83%90%E3%83%AB%E3%82%B3%E3%83%8B%E3%83%BC15.jpg"
-                        alt="Room_A_バルコニー"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/12bd6048690247a7bc3f52cde1fa550d/Room_A_%E3%83%90%E3%83%AB%E3%82%B3%E3%83%8B%E3%83%BC15.jpg', 'Room_A_バルコニー')">
-                    <div class="photo-caption">Room_A_バルコニー</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/8f88b0ea096145049590725ddc34ad9c/Room_A_%E3%83%90%E3%83%AB%E3%82%B3%E3%83%8B%E3%83%BC10.jpg"
-                        alt="Room_A_バルコニー"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/8f88b0ea096145049590725ddc34ad9c/Room_A_%E3%83%90%E3%83%AB%E3%82%B3%E3%83%8B%E3%83%BC10.jpg', 'Room_A_バルコニー')">
-                    <div class="photo-caption">Room_A_バルコニー</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/facd2d9edbc744c29034ed5858c0ed78/Room_A_%E3%83%90%E3%83%AB%E3%82%B3%E3%83%8B%E3%83%BC3.jpg"
-                        alt="Room_A_バルコニー"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/facd2d9edbc744c29034ed5858c0ed78/Room_A_%E3%83%90%E3%83%AB%E3%82%B3%E3%83%8B%E3%83%BC3.jpg', 'Room_A_バルコニー')">
-                    <div class="photo-caption">Room_A_バルコニー</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/9759d13741e2413fa89926d65bec6132/Room_A_%E3%83%90%E3%83%AB%E3%82%B3%E3%83%8B%E3%83%BC4.jpg"
-                        alt="Room_A_バルコニー"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/9759d13741e2413fa89926d65bec6132/Room_A_%E3%83%90%E3%83%AB%E3%82%B3%E3%83%8B%E3%83%BC4.jpg', 'Room_A_バルコニー')">
-                    <div class="photo-caption">Room_A_バルコニー</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/cee6ceeb6c4045458fc4b0656bdd2d61/Room_A_%E3%83%90%E3%83%AB%E3%82%B3%E3%83%8B%E3%83%BC1.jpg"
-                        alt="Room_A_バルコニー"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/cee6ceeb6c4045458fc4b0656bdd2d61/Room_A_%E3%83%90%E3%83%AB%E3%82%B3%E3%83%8B%E3%83%BC1.jpg', 'Room_A_バルコニー')">
-                    <div class="photo-caption">Room_A_バルコニー</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/3554ad3cb5af44d6a0e3550ddf556e2e/Room_A_%E3%83%90%E3%82%B9%E3%83%AB%E3%83%BC%E3%83%A02.jpg"
-                        alt="Room_A_バスルーム"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/3554ad3cb5af44d6a0e3550ddf556e2e/Room_A_%E3%83%90%E3%82%B9%E3%83%AB%E3%83%BC%E3%83%A02.jpg', 'Room_A_バスルーム')">
-                    <div class="photo-caption">Room_A_バスルーム</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/fdbda03ac14c4ee79dd2f75fc68f3bc7/Room_A_%E3%83%90%E3%82%B9%E3%83%AB%E3%83%BC%E3%83%A01.jpg"
-                        alt="Room_A_バスルーム"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/fdbda03ac14c4ee79dd2f75fc68f3bc7/Room_A_%E3%83%90%E3%82%B9%E3%83%AB%E3%83%BC%E3%83%A01.jpg', 'Room_A_バスルーム')">
-                    <div class="photo-caption">Room_A_バスルーム</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/b917d3f03ef04fa799707c3abbfcaaa1/Room_A_%E3%83%88%E3%82%A4%E3%83%AC1.jpg"
-                        alt="Room_A_トイレ"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/b917d3f03ef04fa799707c3abbfcaaa1/Room_A_%E3%83%88%E3%82%A4%E3%83%AC1.jpg', 'Room_A_トイレ')">
-                    <div class="photo-caption">Room_A_トイレ</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/221a9de313b7408196c189da73586a0c/Room_A_%E3%83%80%E3%82%A4%E3%83%8B%E3%83%B3%E3%82%B010.jpg"
-                        alt="Room_A_ダイニング"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/221a9de313b7408196c189da73586a0c/Room_A_%E3%83%80%E3%82%A4%E3%83%8B%E3%83%B3%E3%82%B010.jpg', 'Room_A_ダイニング')">
-                    <div class="photo-caption">Room_A_ダイニング</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/d1eeb2508c9f48078a0afbab4c63ea53/Room_A_%E3%83%80%E3%82%A4%E3%83%8B%E3%83%B3%E3%82%B05.jpg"
-                        alt="Room_A_ダイニング"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/d1eeb2508c9f48078a0afbab4c63ea53/Room_A_%E3%83%80%E3%82%A4%E3%83%8B%E3%83%B3%E3%82%B05.jpg', 'Room_A_ダイニング')">
-                    <div class="photo-caption">Room_A_ダイニング</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/ab543345d779487887b5d06589268677/Room_A_%E3%83%80%E3%82%A4%E3%83%8B%E3%83%B3%E3%82%B04.jpg"
-                        alt="Room_A_ダイニング"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/ab543345d779487887b5d06589268677/Room_A_%E3%83%80%E3%82%A4%E3%83%8B%E3%83%B3%E3%82%B04.jpg', 'Room_A_ダイニング')">
-                    <div class="photo-caption">Room_A_ダイニング</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/7eb800d8967540efb6eb3ab6f356034d/Room_A_%E3%83%80%E3%82%A4%E3%83%8B%E3%83%B3%E3%82%B02.jpg"
-                        alt="Room_A_ダイニング"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/7eb800d8967540efb6eb3ab6f356034d/Room_A_%E3%83%80%E3%82%A4%E3%83%8B%E3%83%B3%E3%82%B02.jpg', 'Room_A_ダイニング')">
-                    <div class="photo-caption">Room_A_ダイニング</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/cb61a6b5784f41ce8098646b5615189e/Room_A_%E3%83%80%E3%82%A4%E3%83%8B%E3%83%B3%E3%82%B01.jpg"
-                        alt="Room_A_ダイニング"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/cb61a6b5784f41ce8098646b5615189e/Room_A_%E3%83%80%E3%82%A4%E3%83%8B%E3%83%B3%E3%82%B01.jpg', 'Room_A_ダイニング')">
-                    <div class="photo-caption">Room_A_ダイニング</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/5f0a188e31764a4f926ad698b5fcab8b/Room_A_%E3%82%AD%E3%83%83%E3%83%81%E3%83%B34.jpg"
-                        alt="Room_A_キッチン"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/5f0a188e31764a4f926ad698b5fcab8b/Room_A_%E3%82%AD%E3%83%83%E3%83%81%E3%83%B34.jpg', 'Room_A_キッチン')">
-                    <div class="photo-caption">Room_A_キッチン</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/418d280da5b14db58cf83f9b409f7534/Room_A_%E3%82%AD%E3%83%83%E3%83%81%E3%83%B32.jpg"
-                        alt="Room_A_キッチン"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/418d280da5b14db58cf83f9b409f7534/Room_A_%E3%82%AD%E3%83%83%E3%83%81%E3%83%B32.jpg', 'Room_A_キッチン')">
-                    <div class="photo-caption">Room_A_キッチン</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/1c645dda61c542da9864aabdc1d359f3/Room_A_%E3%82%AD%E3%83%83%E3%83%81%E3%83%B31.jpg"
-                        alt="Room_A_キッチン"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/1c645dda61c542da9864aabdc1d359f3/Room_A_%E3%82%AD%E3%83%83%E3%83%81%E3%83%B31.jpg', 'Room_A_キッチン')">
-                    <div class="photo-caption">Room_A_キッチン</div>
-                </div>
-
-            </div>
-            <div id="rooms-more-btn-wrapper" style="text-align: center; margin-top: 24px; display: none;">
-                <button id="rooms-more-btn" class="more-btn">もっと見る</button>
-            </div>
-        </section>
-
-        <section id="photos" class="section">
-            <h2 class="section-title">Room B</h2>
-            <div class="photo-gallery" id="photo-gallery-container">
-                <div class="photo-item is-visible">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/c606770221b549cbbca048af5da13593/Room_B_2.png"
-                        alt="Room_B_間取り図"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/c606770221b549cbbca048af5da13593/Room_B_2.png', 'Room_B_間取り図')">
-                    <div class="photo-caption">Room_B_間取り図</div>
-                </div>
-
-                <div class="photo-item is-visible">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/be84431b5b27423983141598d2a0c402/Room_B_%E6%B4%8B%E5%AE%A44.jpg"
-                        alt="Room_B_洋室"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/be84431b5b27423983141598d2a0c402/Room_B_%E6%B4%8B%E5%AE%A44.jpg', 'Room_B_洋室')">
-                    <div class="photo-caption">Room_B_洋室</div>
-                </div>
-
-                <div class="photo-item is-visible">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/bedb4024ad3c4158ac8668e5a95a941c/Room_B_%E6%B4%8B%E5%AE%A41.jpg"
-                        alt="Room_B_洋室"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/bedb4024ad3c4158ac8668e5a95a941c/Room_B_%E6%B4%8B%E5%AE%A41.jpg', 'Room_B_洋室')">
-                    <div class="photo-caption">Room_B_洋室</div>
-                </div>
-
-                <div class="photo-item is-visible">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/ea501a0fa8be4aed81866b7c5d949920/Room_B_%E8%84%B1%E8%A1%A3%E5%A0%B41.jpg"
-                        alt="Room_B_脱衣場"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/ea501a0fa8be4aed81866b7c5d949920/Room_B_%E8%84%B1%E8%A1%A3%E5%A0%B41.jpg', 'Room_B_脱衣場')">
-                    <div class="photo-caption">Room_B_脱衣場</div>
-                </div>
-
-                <div class="photo-item is-visible">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/3a6e73bceb68443d99d278fa778db467/Room_B_%E6%B4%97%E9%9D%A2%E5%8F%B01.jpg"
-                        alt="Room_B_洗面台"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/3a6e73bceb68443d99d278fa778db467/Room_B_%E6%B4%97%E9%9D%A2%E5%8F%B01.jpg', 'Room_B_洗面台')">
-                    <div class="photo-caption">Room_B_洗面台</div>
-                </div>
-
-                <div class="photo-item is-visible">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/e2d4510a50904147a4c80ede677f349d/Room_B_%E7%8E%84%E9%96%A21.jpg"
-                        alt="Room_B_玄関"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/e2d4510a50904147a4c80ede677f349d/Room_B_%E7%8E%84%E9%96%A21.jpg', 'Room_B_玄関')">
-                    <div class="photo-caption">Room_B_玄関</div>
-                </div>
-
-                <div class="photo-item is-visible">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/c963ff16339c4ed6b20020a517625fb5/Room_B_%E3%83%99%E3%83%83%E3%83%89%E3%83%AB%E3%83%BC%E3%83%A04.jpg"
-                        alt="Room_B_ベッドルーム"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/c963ff16339c4ed6b20020a517625fb5/Room_B_%E3%83%99%E3%83%83%E3%83%89%E3%83%AB%E3%83%BC%E3%83%A04.jpg', 'Room_B_ベッドルーム')">
-                    <div class="photo-caption">Room_B_ベッドルーム</div>
-                </div>
-
-                <div class="photo-item is-visible">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/7c2fd87e925c4a29a4d5bdac95620d78/Room_B_%E3%83%99%E3%83%83%E3%83%89%E3%83%AB%E3%83%BC%E3%83%A02.jpg"
-                        alt="Room_B_ベッドルーム"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/7c2fd87e925c4a29a4d5bdac95620d78/Room_B_%E3%83%99%E3%83%83%E3%83%89%E3%83%AB%E3%83%BC%E3%83%A02.jpg', 'Room_B_ベッドルーム')">
-                    <div class="photo-caption">Room_B_ベッドルーム</div>
-                </div>
-
-                <div class="photo-item is-visible">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/3295fb77cea04a97874c2ae9644d5568/Room_B_%E3%83%99%E3%83%83%E3%83%89%E3%83%AB%E3%83%BC%E3%83%A01.jpg"
-                        alt="Room_B_ベッドルーム"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/3295fb77cea04a97874c2ae9644d5568/Room_B_%E3%83%99%E3%83%83%E3%83%89%E3%83%AB%E3%83%BC%E3%83%A01.jpg', 'Room_B_ベッドルーム')">
-                    <div class="photo-caption">Room_B_ベッドルーム</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/e5b5426c3a744060b38487a6e8f3b67a/Room_B_%E3%83%90%E3%82%B9%E3%83%AB%E3%83%BC%E3%83%A01.jpg"
-                        alt="Room_B_バスルーム"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/e5b5426c3a744060b38487a6e8f3b67a/Room_B_%E3%83%90%E3%82%B9%E3%83%AB%E3%83%BC%E3%83%A01.jpg', 'Room_B_バスルーム')">
-                    <div class="photo-caption">Room_B_バスルーム</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/17e49e5647484ec5a34e3f80a3f01278/Room_B_%E3%83%88%E3%82%A4%E3%83%AC1.jpg"
-                        alt="Room_B_トイレ"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/17e49e5647484ec5a34e3f80a3f01278/Room_B_%E3%83%88%E3%82%A4%E3%83%AC1.jpg', 'Room_B_トイレ')">
-                    <div class="photo-caption">Room_B_トイレ</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/f790b0e818f64219ae4240cca99b3b5a/Room_B_%E3%83%80%E3%82%A4%E3%83%8B%E3%83%B3%E3%82%B013.jpg"
-                        alt="Room_B_ダイニング"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/f790b0e818f64219ae4240cca99b3b5a/Room_B_%E3%83%80%E3%82%A4%E3%83%8B%E3%83%B3%E3%82%B013.jpg', 'Room_B_ダイニング')">
-                    <div class="photo-caption">Room_B_ダイニング</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/ed1afbd2467940eebb888e10f6eef8c6/Room_B_%E3%83%80%E3%82%A4%E3%83%8B%E3%83%B3%E3%82%B05.jpg"
-                        alt="Room_B_ダイニング"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/ed1afbd2467940eebb888e10f6eef8c6/Room_B_%E3%83%80%E3%82%A4%E3%83%8B%E3%83%B3%E3%82%B05.jpg', 'Room_B_ダイニング')">
-                    <div class="photo-caption">Room_B_ダイニング</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/67391e5073194f5aacba59c31fa117d2/Room_B_%E3%83%80%E3%82%A4%E3%83%8B%E3%83%B3%E3%82%B03.jpg"
-                        alt="Room_B_ダイニング"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/67391e5073194f5aacba59c31fa117d2/Room_B_%E3%83%80%E3%82%A4%E3%83%8B%E3%83%B3%E3%82%B03.jpg', 'Room_B_ダイニング')">
-                    <div class="photo-caption">Room_B_ダイニング</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/cbf421c5223e4da7bb5c77058288f616/Room_B_%E3%83%80%E3%82%A4%E3%83%8B%E3%83%B3%E3%82%B01.jpg"
-                        alt="Room_B_ダイニング"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/cbf421c5223e4da7bb5c77058288f616/Room_B_%E3%83%80%E3%82%A4%E3%83%8B%E3%83%B3%E3%82%B01.jpg', 'Room_B_ダイニング')">
-                    <div class="photo-caption">Room_B_ダイニング</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/1f11a7cf2d2f4fe29db091f8f212ab69/Room_B_%E3%82%AD%E3%83%83%E3%83%81%E3%83%B34.jpg"
-                        alt="Room_B_キッチン"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/1f11a7cf2d2f4fe29db091f8f212ab69/Room_B_%E3%82%AD%E3%83%83%E3%83%81%E3%83%B34.jpg', 'Room_B_キッチン')">
-                    <div class="photo-caption">Room_B_キッチン</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/aa79cc5fae374da0a529dcbb69af2536/Room_B_%E3%82%AD%E3%83%83%E3%83%81%E3%83%B32.jpg"
-                        alt="Room_B_キッチン"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/aa79cc5fae374da0a529dcbb69af2536/Room_B_%E3%82%AD%E3%83%83%E3%83%81%E3%83%B32.jpg', 'Room_B_キッチン')">
-                    <div class="photo-caption">Room_B_キッチン</div>
-                </div>
-
-                <div class="photo-item ">
-                    <img src="https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/0ad1fb12eef743a885a05785dd8d4eea/Room_B_%E3%82%AD%E3%83%83%E3%83%81%E3%83%B31.jpg"
-                        alt="Room_B_キッチン"
-                        onclick="openModal('https://images.microcms-assets.io/assets/1b0bc5589e374da398c9b92852f10511/0ad1fb12eef743a885a05785dd8d4eea/Room_B_%E3%82%AD%E3%83%83%E3%83%81%E3%83%B31.jpg', 'Room_B_キッチン')">
-                    <div class="photo-caption">Room_B_キッチン</div>
-                </div>
-            </div>
-
-            <div id="gallery-more-btn-wrapper" style="text-align: center; margin-top: 24px; display: none;">
-                <button id="gallery-more-btn" class="more-btn">もっと見る</button>
-            </div>
-        </section>
-
-        <!-- ここに360度カメラセクションを挿入 -->
-        <section id="theta360" class="section theta-section">
-            <h2 class="section-title" style="text-align:center;">室内360度カメラ</h2>
-            <div class="theta-links">
-                <a href="https://r02824496.theta360.biz/t/3ba8f19c-0004-11f1-b7fe-06e15c8163f7-1" target="_blank"
-                    rel="noopener">Room A</a>
-                <a href="https://r02824496.theta360.biz/t/ccd7898a-0586-11f1-ba53-0a7fdda087bb-1" target="_blank"
-                    rel="noopener">Room B</a>
-            </div>
-        </section>
-
-        <section id="access" class="section">
-            <h2 class="section-title">アクセス</h2>
-            <div class="access-info">
-                〒240-0112 神奈川県三浦郡葉山町堀内216-23<br>TEL:
-                00-0000-0000<br>JR逗子駅より車で11分。<br>富士山を望む海までは徒歩15秒<br>葉山マリーナ：徒歩5分。森戸海岸：徒歩10分。<br>コンビニエンスストア：徒歩5分。コインパーキング：徒歩1分。
-            </div>
-            <!-- 地図を横幅広めで最新の場所に変更 -->
-            <iframe class="map-frame"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3863.4749041017376!2d139.56998579999998!3d35.2805333!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60184757b398622b%3A0xa8cea423508cc858!2z44OV44Kh44OW44O844Or6JGJ5bGx5Yil6YK4!5e1!3m2!1sja!2sjp!4v1771263479864!5m2!1sja!2sjp"
-                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                title="Google Map"></iframe>
-        </section>
-
-        <!-- お問い合わせセクション: メールアドレス表示 -->
-        <section id="contact" class="section">
-            <h2 class="section-title">お問い合わせ</h2>
-            <div class="contact-email-wrapper">
-                <p style="margin-bottom: 20px;">お問い合わせは、以下のメールアドレスまでご連絡ください。</p>
-                <a href="mailto:faveur.hayama@gmail.com" class="contact-email">
-                    <span class="contact-email-icon">✉</span>
-                    faveur.hayama@gmail.com
-                </a>
-            </div>
-        </section>
-    </main>
-
-    <!-- モーダル表示用要素 -->
-    <div class="modal-overlay" id="modal-overlay">
-        <div class="modal-img-wrapper">
-            <button class="close-modal-btn" id="close-modal-btn" aria-label="閉じる">&times;</button>
-            <img class="modal-img" id="modal-img" src="" alt="">
-            <div class="modal-caption" id="modal-caption" style="color:white;margin-top:10px;"></div>
-        </div>
     </div>
-
-    <footer>
-        <span class="footer-logo">ファブール葉山別邸</span>
-        <div class="copyright">© 2026 ファブール葉山別邸 All Rights Reserved.</div>
-    </footer>
-
-    <script>
-        // --- メニュー制御 ---
-        // メニューtoggleは .menu-toggle 2つあるので両方対応
-        const menuToggles = Array.from(document.querySelectorAll('.menu-toggle'));
-        const mobileNav = document.getElementById('mobile-nav');
-        const overlay = document.querySelector('.overlay');
-
-        function openMenu() {
-            menuToggles.forEach(btn => btn.classList.add('open'));
-            mobileNav.classList.add('open');
-            overlay.classList.add('open');
-            mobileNav.setAttribute('aria-hidden', 'false');
-            menuToggles.forEach(btn => btn.setAttribute('aria-expanded', 'true'));
-            document.body.style.overflow = "hidden";
-        }
-
-        function closeMenu() {
-            menuToggles.forEach(btn => btn.classList.remove('open'));
-            mobileNav.classList.remove('open');
-            overlay.classList.remove('open');
-            mobileNav.setAttribute('aria-hidden', 'true');
-            menuToggles.forEach(btn => btn.setAttribute('aria-expanded', 'false'));
-            document.body.style.overflow = "";
-        }
-
-        menuToggles.forEach(btn => btn.addEventListener('click', () => {
-            mobileNav.classList.contains('open') ? closeMenu() : openMenu();
-        }));
-        overlay.addEventListener('click', closeMenu);
-
-        /* --- モーダル拡大表示機能 --- */
-        function openModal(imageUrl, captionText) {
-            const modalOverlay = document.getElementById('modal-overlay');
-            const modalImg = document.getElementById('modal-img');
-            const modalCaption = document.getElementById('modal-caption');
-            modalImg.src = imageUrl;
-            modalImg.alt = captionText || '';
-            modalCaption.textContent = captionText || '';
-            modalOverlay.classList.add('open');
-            document.body.style.overflow = "hidden";
-        }
-
-        function closeModal() {
-            const modalOverlay = document.getElementById('modal-overlay');
-            const modalImg = document.getElementById('modal-img');
-            modalImg.src = '';
-            modalImg.alt = '';
-            document.getElementById('modal-caption').textContent = '';
-            modalOverlay.classList.remove('open');
-            document.body.style.overflow = "";
-        }
-
-        document.getElementById('close-modal-btn').addEventListener('click', closeModal);
-        document.getElementById('modal-overlay').addEventListener('click', function (e) {
-            if (e.target === this) closeModal();
+    <button class="menu-toggle" aria-label="メニューを開く" aria-controls="mobile-nav" aria-expanded="false" style="display:none;">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+    </button>
+    <nav class="mobile-nav" id="mobile-nav" aria-hidden="true">
+        <ul>
+            <li><a href="#concept" onclick="closeMenu()">コンセプト</a></li>
+            <li><a href="#news" onclick="closeMenu()">新着情報</a></li>
+            <li><a href="#basicinfo" onclick="closeMenu()">基本情報</a></li>
+            <li><a href="#rooms" onclick="closeMenu()">Room A</a></li>
+            <li><a href="#photos" onclick="closeMenu()">Room B</a></li>
+            <li><a href="#access" onclick="closeMenu()">アクセス</a></li>
+        </ul>
+    </nav>
+    <div class="google-translate-wrapper">
+        <div id="google_translate_element"></div>
+    </div>
+    <div class="overlay"></div>
+</header>
+<main>
+    <section class="hero">
+        <img src="images/0052.JPG" alt="Hero Image" class="hero-img">
+        <h1 class="hero-title">富士と夕陽を望む邸宅</h1>
+    </section>
+    <section id="concept" class="section">
+        <h2 class="section-title">コンセプト</h2>
+        <div class="concept-text">
+            <p>海岸まで徒歩15秒<br>富士山と夕陽を望む海辺のお家<br>私たちは、訪れる皆様の心がゆっくりと<br>ほどけていくような場所を目指しています。</p>
+        </div>
+    </section>
+    <section id="news" class="section">
+        <h2 class="section-title">新着情報</h2>
+        <ul class="news-list" id="news-list"><!-- NEWS_LIST --></ul>
+    </section>
+    <section id="basicinfo" class="section">
+        <h2 class="section-title">基本情報</h2>
+        <table class="basicinfo-table">
+            <tr><th>施設名</th><td>ファブール葉山別邸</td></tr>
+            <tr><th>住所</th><td>〒240-0112 神奈川県三浦郡葉山町堀内216-23</td></tr>
+            <tr><th>電話番号</th><td>00-0000-0000</td></tr>
+            <tr><th>チェックイン</th><td>16:00〜20:00</td></tr>
+            <tr><th>チェックアウト</th><td>〜10:00</td></tr>
+            <tr><th>客室数</th><td>2室 (Room A, Room B)</td></tr>
+            <tr><th>駐車場</th><td>部屋ごとに1台 (無料・予約不要)</td></tr>
+            <tr><th>最大定員</th><td>各室5名様</td></tr>
+            <tr><th>間取り</th><td>Room A（3階）: 1LDK＋バルコニー<br>Room B（2階）: 1LDK</td></tr>
+            <tr><th>キッチン</th><td>IHコンロ、冷蔵庫、電子レンジ、調理器具・食器一式完備</td></tr>
+            <tr><th>アメニティ</th><td>シャンプー、リンス、ボディソープ、タオル、歯ブラシ、ドライヤー</td></tr>
+            <tr><th>通信環境</th><td>全館無料Wi-Fi完備</td></tr>
+            <tr><th>喫煙</th><td>全館禁煙（屋外に指定喫煙スペースあり）</td></tr>
+            <tr><th>ペット</th><td>不可</td></tr>
+            <tr><th>お支払い方法</th><td>予約時事前決済のみ</td></tr>
+        </table>
+    </section>
+    <section id="rooms" class="section">
+        <h2 class="section-title">Room A</h2>
+        <div class="photo-gallery" id="rooms-container"><!-- ROOMS_LIST --></div>
+        <div id="rooms-more-btn-wrapper" style="text-align:center;margin-top:24px;display:none;">
+            <button id="rooms-more-btn" class="more-btn">もっと見る</button>
+            <button id="rooms-close-btn" class="more-btn" style="display:none;">閉じる</button>
+        </div>
+    </section>
+    <section id="photos" class="section">
+        <h2 class="section-title">Room B</h2>
+        <div class="photo-gallery" id="photo-gallery-container"><!-- PHOTO_LIST --></div>
+        <div id="gallery-more-btn-wrapper" style="text-align:center;margin-top:24px;display:none;">
+            <button id="gallery-more-btn" class="more-btn">もっと見る</button>
+            <button id="gallery-close-btn" class="more-btn" style="display:none;">閉じる</button>
+        </div>
+    </section>
+    <section id="theta360" class="section theta-section">
+        <h2 class="section-title" style="text-align:center;">室内360度カメラ</h2>
+        <div class="theta-links">
+            <a href="https://r02824496.theta360.biz/t/3ba8f19c-0004-11f1-b7fe-06e15c8163f7-1" target="_blank" rel="noopener">Room A</a>
+            <a href="https://r02824496.theta360.biz/t/ccd7898a-0586-11f1-ba53-0a7fdda087bb-1" target="_blank" rel="noopener">Room B</a>
+        </div>
+    </section>
+    <section id="access" class="section">
+        <h2 class="section-title">アクセス</h2>
+        <div class="access-info">
+            〒240-0112 神奈川県三浦郡葉山町堀内216-23<br>TEL:00-0000-0000<br>JR逗子駅より車で11分。<br>富士山を望む海までは徒歩15秒<br>葉山マリーナ：徒歩5分。森戸海岸：徒歩10分。<br>コンビニエンスストア：徒歩5分。コインパーキング：徒歩1分。
+        </div>
+        <iframe class="map-frame" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3863.4749041017376!2d139.56998579999998!3d35.2805333!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60184757b398622b%3A0xa8cea423508cc858!2z44OV44Kh44OW44O844Or6JGJ5bGx5Yil6YK4!5e1!3m2!1sja!2sjp!4v1771263479864!5m2!1sja!2sjp" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Google Map"></iframe>
+    </section>
+    <section id="contact" class="section">
+        <h2 class="section-title">お問い合わせ</h2>
+        <div class="contact-email-wrapper">
+            <p style="margin-bottom:20px;">お問い合わせは、以下のメールアドレスまでご連絡ください。</p>
+            <a href="mailto:faveur.hayama@gmail.com" class="contact-email">
+                <span class="contact-email-icon">✉</span>
+                faveur.hayama@gmail.com
+            </a>
+        </div>
+    </section>
+</main>
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal-img-wrapper">
+        <button class="close-modal-btn" id="close-modal-btn" aria-label="閉じる">&times;</button>
+        <img class="modal-img" id="modal-img" src="" alt="">
+        <div class="modal-caption" id="modal-caption" style="color:white;margin-top:10px;"></div>
+    </div>
+</div>
+<footer>
+    <span class="footer-logo">ファブール葉山別邸</span>
+    <div class="copyright">© 2026 ファブール葉山別邸 All Rights Reserved.</div>
+</footer>
+<script>
+// --- メニュー制御 ---
+const menuToggles = Array.from(document.querySelectorAll('.menu-toggle'));
+const mobileNav = document.getElementById('mobile-nav');
+const overlay = document.querySelector('.overlay');
+function openMenu() {
+    menuToggles.forEach(btn=>btn.classList.add('open'));
+    mobileNav.classList.add('open');
+    overlay.classList.add('open');
+    mobileNav.setAttribute('aria-hidden','false');
+    menuToggles.forEach(btn=>btn.setAttribute('aria-expanded','true'));
+    document.body.style.overflow="hidden";
+}
+function closeMenu() {
+    menuToggles.forEach(btn=>btn.classList.remove('open'));
+    mobileNav.classList.remove('open');
+    overlay.classList.remove('open');
+    mobileNav.setAttribute('aria-hidden','true');
+    menuToggles.forEach(btn=>btn.setAttribute('aria-expanded','false'));
+    document.body.style.overflow="";
+}
+menuToggles.forEach(btn=>btn.addEventListener('click',()=>{
+    mobileNav.classList.contains('open')?closeMenu():openMenu();
+}));
+overlay.addEventListener('click',closeMenu);
+// --- モーダル拡大表示機能 ---
+function openModal(imageUrl,captionText){
+    const modalOverlay=document.getElementById('modal-overlay');
+    const modalImg=document.getElementById('modal-img');
+    const modalCaption=document.getElementById('modal-caption');
+    modalImg.src=imageUrl;
+    modalImg.alt=captionText||'';
+    modalCaption.textContent=captionText||'';
+    modalOverlay.classList.add('open');
+    document.body.style.overflow="hidden";
+}
+function closeModal(){
+    const modalOverlay=document.getElementById('modal-overlay');
+    const modalImg=document.getElementById('modal-img');
+    modalImg.src='';
+    modalImg.alt='';
+    document.getElementById('modal-caption').textContent='';
+    modalOverlay.classList.remove('open');
+    document.body.style.overflow="";
+}
+document.getElementById('close-modal-btn').addEventListener('click',closeModal);
+document.getElementById('modal-overlay').addEventListener('click',function(e){
+    if(e.target===this)closeModal();
+});
+document.addEventListener('DOMContentLoaded',()=>{
+    function setupMoreButton(containerId,wrapperId,btnId){
+        const container=document.getElementById(containerId);
+        const wrapper=document.getElementById(wrapperId);
+        const btn=document.getElementById(btnId);
+        if(!container||!wrapper||!btn)return;
+        const items=container.querySelectorAll('.photo-item');
+        if(items.length>9){wrapper.style.display="block";}
+        btn.addEventListener('click',()=>{
+            items.forEach(item=>item.classList.add('is-visible'));
+            wrapper.style.display="none";
         });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            function setupMoreButton(containerId, wrapperId, btnId) {
-                const container = document.getElementById(containerId);
-                const wrapper = document.getElementById(wrapperId);
-                const btn = document.getElementById(btnId);
-
-                if (!container || !wrapper || !btn) return;
-
-                // 10枚目以降（シールなし）がある場合のみボタンを表示
-                const items = container.querySelectorAll('.photo-item');
-                if (items.length > 9) {
-                    wrapper.style.display = "block";
-                }
-
-                btn.addEventListener('click', () => {
-                    items.forEach(item => item.classList.add('is-visible'));
-                    wrapper.style.display = "none";
-                });
-            }
-
-            // Room A と Room B それぞれに実行
-            setupMoreButton('rooms-container', 'rooms-more-btn-wrapper', 'rooms-more-btn');
-            setupMoreButton('photo-gallery-container', 'gallery-more-btn-wrapper', 'gallery-more-btn');
-        });
-    </script>
-
+    }
+    setupMoreButton('rooms-container','rooms-more-btn-wrapper','rooms-more-btn');
+    setupMoreButton('photo-gallery-container','gallery-more-btn-wrapper','gallery-more-btn');
+});
+</script>
 </body>
-
 </html>
