@@ -3,16 +3,26 @@
 
 <head>
     <meta charset="UTF-8">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3PYOXF8QY4"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-3PYOXF8QY4');
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>お知らせ詳細 | My journal Aizu</title>
+    <title>お知らせ詳細 | ファブール葉山別邸</title>
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
-        html, body {
+        html,
+        body {
             width: 100%;
             box-sizing: border-box;
             overflow-x: hidden;
         }
+
         /* 全体の余白と中央寄せ */
         .container {
             margin-bottom: 120px;
@@ -23,22 +33,26 @@
             padding-right: 24px;
             box-sizing: border-box;
         }
+
         /* 記事タイトルや戻るリンクも折り返す */
         .article-title {
             word-break: break-word;
             font-size: 2rem;
         }
+
         .back-link {
             display: inline-block;
             margin-top: 2em;
             word-break: break-word;
             font-size: 1rem;
         }
+
         .article-content {
             word-break: break-word;
             font-size: 1.07rem;
             overflow-wrap: break-word;
         }
+
         .article-eyecatch {
             max-width: 100%;
             height: auto;
@@ -46,6 +60,7 @@
             margin: 24px auto;
             border-radius: 8px;
         }
+
         /* モバイル対応: パディング調整 ＆ フォントサイズ縮小で横スクロール出さない */
         @media (max-width: 800px) {
             .container {
@@ -54,32 +69,41 @@
                 padding-right: 5vw;
             }
         }
+
         @media (max-width: 480px) {
             .container {
                 padding-left: 4vw;
                 padding-right: 4vw;
             }
+
             .article-title {
                 font-size: 1.25rem;
             }
+
             .article-content {
                 font-size: 0.97rem;
             }
+
             .back-link {
                 font-size: 0.93rem;
             }
         }
+
         /* 画像・テーブルなどがオーバーフローしないように */
-        .article-content img, .article-content video, .article-content iframe {
+        .article-content img,
+        .article-content video,
+        .article-content iframe {
             max-width: 100%;
             height: auto;
         }
+
         .article-content table {
             max-width: 100%;
             display: block;
             overflow-x: auto;
             border-collapse: collapse;
         }
+
         /* サイト全体で横にはみ出す要素を抑止 */
         * {
             box-sizing: border-box;
@@ -89,14 +113,14 @@
 
 <body>
     <header>
-        <a href="index.html" class="logo">My journal aizu</a>
+        <a href="index.html" class="logo">ファブール葉山別邸</a>
         <nav class="desktop-nav">
             <ul>
                 <li><a href="index.html#concept">コンセプト</a></li>
                 <li><a href="index.html#news">新着情報</a></li>
                 <li><a href="index.html#basicinfo">基本情報</a></li>
-                <li><a href="index.html#rooms">部屋</a></li>
-                <li><a href="index.html#photos">写真</a></li>
+                <li><a href="index.html#rooms">Room A</a></li>
+                <li><a href="index.html#photos">Room B</a></li>
                 <li><a href="index.html#access">アクセス</a></li>
             </ul>
         </nav>
@@ -117,8 +141,8 @@
             <li><a href="index.html#concept">コンセプト</a></li>
             <li><a href="index.html#news">新着情報</a></li>
             <li><a href="index.html#basicinfo">基本情報</a></li>
-            <li><a href="index.html#rooms">部屋</a></li>
-            <li><a href="index.html#photos">写真</a></li>
+            <li><a href="index.html#rooms">Room A</a></li>
+            <li><a href="index.html#photos">Room B</a></li>
             <li><a href="index.html#access">アクセス</a></li>
         </ul>
     </nav>
@@ -160,7 +184,7 @@
                     ${image ? `<img src="${image.url}" class="article-eyecatch" alt="">` : ''}
                     <div class="article-content">${content}</div>
                 `;
-                document.title = `${data.title} | My journal Aizu`;
+                document.title = `${data.title} | ファブール葉山別邸`;
             } catch (err) {
                 container.innerHTML = '<p>読み込みに失敗しました。</p>';
             }
@@ -184,6 +208,10 @@
 
         fetchDetail();
     </script>
+    <footer>
+        <span class="footer-logo">ファブール葉山別邸</span>
+        <div class="copyright">© 2026 ファブール葉山別邸 All Rights Reserved.</div>
+    </footer>
 </body>
 
 </html>
