@@ -77,6 +77,12 @@ async function build() {
         // 必要な静的ファイルも dist にコピー
         if (fs.existsSync('style.css')) fs.copyFileSync('style.css', 'dist/style.css');
         if (fs.existsSync('news-detail.html')) fs.copyFileSync('news-detail.html', 'dist/news-detail.html');
+        if (fs.existsSync('specified-commercial-transactions.html')) {
+            fs.copyFileSync(
+                'specified-commercial-transactions.html',
+                'dist/specified-commercial-transactions.html'
+            );
+        }
 
         // imagesフォルダをコピー
         if (fs.existsSync('images')) {
